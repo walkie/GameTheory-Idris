@@ -10,14 +10,16 @@ data VectBy : (Nat -> Type) -> Nat -> Type -> Type where
 
 using (X : Nat -> Type)
 
-  -- | Convert a plain vector into a dimen
+  -- | Convert a plain vector into an X-indexed vector.
   implicit
   fromVect : Vect n a -> VectBy X n a
   fromVect = MkVectBy
 
+  -- | Convert an X-indexed vector into a plain vector.
   toVect : VectBy X n a -> Vect n a
   toVect (MkVectBy v) = v
 
+  -- | Index into an X-indexed vector by casting X to a finite nat.
   for : Cast (X n) (Fin n) => X n -> VectBy X n a -> a
   for x (MkVectBy v) = index (cast x) v
 
