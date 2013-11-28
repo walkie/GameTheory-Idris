@@ -53,12 +53,17 @@ showFloat : Float -> String
 showFloat f = if f == floor f then fst (break (== '.') s) else s
   where s = show f
 
-{-
+-- | Show a list of strings as a comma-separated sequence.
+showSeq : List String -> String
+showSeq []        = ""
+showSeq (s :: []) = s
+showSeq (s :: ss) = s ++ "," ++ showSeq ss
+
 -- | String representation of a Payoff.
-showPayoff :: Payoff -> String
-showPayoff (ByPlayer vs) = showSeq (map showFloat vs)
+showPayoff : Payoff n -> String
+showPayoff = showSeq . toList . map showFloat
 
 -- | Bracketed string representation of a Payoff.
-showPayoffAsList :: Payoff -> String
+showPayoffAsList : Payoff n -> String
 showPayoffAsList p = "[" ++ showPayoff p ++ "]"
--}
+
