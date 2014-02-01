@@ -1,34 +1,38 @@
 module Game
 
+import VectBy
 import Payoff
 
 %default total
 
-Edges : Nat -> Type
-Edges n = Fin n -> Type -> Vect n Type -> Type
 
+-- | A 'ByPlayer' vector of types representing the moves that are available
+--   to each player.
 Moves : Nat -> Type
-Moves n = Vect n Type
+Moves n = ByPlayer n Type
+
+Edges : Nat -> Type
+Edges n = PlayerID n -> Type -> Moves n -> Type
 
 using (e : Edges n, ms : Moves n)
 
   data GameTree : Edges n -> Type -> Moves n -> Type where
-    Node : s -> (p : Fin n) -> e p s ms -> GameTree e s ms
-    Leaf : s -> Payoff n                -> GameTree e s ms
+    Node : s -> (p : PlayerID n) -> e p s ms -> GameTree e s ms
+    Leaf : s -> Payoff n                     -> GameTree e s ms
 
   data Discrete : Edges n where
-    DiscreteEdges : List (index p ms, GameTree Discrete s ms) -> Discrete p s ms
+    DiscreteEdges : List (for p ms, GameTree Discrete s ms) -> Discrete p s ms
   
   data Continuous : Edges n where
-    ContinuousEdges : (index p ms -> GameTree Continuous s ms) -> Continuous p s ms
+    ContinuousEdges : (for p ms -> GameTree Continuous s ms) -> Continuous p s ms
 
   -- | Get the state at the current game node.
   gameState : GameTree e s ms -> s
   gameState (Node s _ _) = s
   gameState (Leaf s _)   = s
 
-  -- | Get the game outbound moves from a list of discrete edges.
-  movesFrom : Discrete p s ms -> List (index p ms)
+  -- | Get the outbound moves from a list of discrete edges.
+  movesFrom : Discrete p s ms -> List (for p ms)
   movesFrom (DiscreteEdges es) = map fst es
   
   -- | Get the children from the current game node.
@@ -61,4 +65,4 @@ moves : Moves 2
 moves = [Integer, Bool]
 
 ex : GameTree Discrete () [Integer, Bool]
-ex = Node () 0 (DiscreteEdges [(1, Leaf () payoff)])
+ex = Node () (player 1) (DiscreteEdges [(1, Leaf () payoff)])
