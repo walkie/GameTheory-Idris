@@ -2,7 +2,10 @@ module VectBy
 
 %default total
 
+
+--
 -- * X-indexed vectors
+--
 
 -- | A vector indexed by some type X.
 data VectBy : (Nat -> Type) -> Nat -> Type -> Type where
@@ -45,7 +48,7 @@ toPlayerID {n} i = map MkPlayerID (integerToFin (i-1) n)
 
 -- | Construct a `PlayerID` from an integer that is statically ensured to be
 --   within range.
-player : (i : Integer) -> {default (ItIsJust _ _) p : IsJust (toPlayerID {n} i)} -> PlayerID n
+player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {n} i)} -> PlayerID n
 player {n} i {p} with (toPlayerID {n} i)
   player {n} i {p = ItIsJust} | Just x = x
 
@@ -78,7 +81,7 @@ toGameID {n} i = map MkGameID (integerToFin (cast n - i) n)
 
 -- | Construct a `GameID` from an integer that is statically ensured to be
 --   within range.
-game : (i : Integer) -> {default (ItIsJust _ _) p : IsJust (toGameID {n} i)} -> GameID n
+game : (i : Integer) -> {default ItIsJust p : IsJust (toGameID {n} i)} -> GameID n
 game {n} i {p} with (toGameID {n} i)
   game {n} i {p = ItIsJust} | Just x = x
 
@@ -90,7 +93,7 @@ ByGame = VectBy GameID
 instance Eq (GameID n) where
   (MkGameID f) == (MkGameID f') = f == f'
 instance Show (GameID n) where
-  show (MkGameID f) = "Game " ++ show (cast n - finToInt f 0)
+  show (MkGameID f) = "Game " ++ show (cast n - finToInteger f)
 instance Cast (GameID n) (Fin n) where
   cast (MkGameID f) = f
 
@@ -109,7 +112,7 @@ toTurnID {n} i = map MkTurnID (integerToFin (cast n - i) n)
 
 -- | Construct a `TurnID` from an integer that is statically ensured to be
 --   within range.
-turn : (i : Integer) -> {default (ItIsJust _ _) p : IsJust (toTurnID {n} i)} -> TurnID n
+turn : (i : Integer) -> {default ItIsJust p : IsJust (toTurnID {n} i)} -> TurnID n
 turn {n} i {p} with (toTurnID {n} i)
   turn {n} i {p = ItIsJust} | Just x = x
 
@@ -121,7 +124,7 @@ ByTurn = VectBy TurnID
 instance Eq (TurnID n) where
   (MkTurnID f) == (MkTurnID f') = f == f'
 instance Show (TurnID n) where
-  show (MkTurnID f) = "Turn " ++ show (cast n - finToInt f 0)
+  show (MkTurnID f) = "Turn " ++ show (cast n - finToInteger f)
 instance Cast (TurnID n) (Fin n) where
   cast (MkTurnID f) = f
 
