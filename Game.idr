@@ -11,20 +11,20 @@ import Payoff
 Moves : Nat -> Type
 Moves n = ByPlayer n Type
 
-Edges : Nat -> Type
-Edges n = PlayerID n -> Type -> Moves n -> Type
+Edges : Type
+Edges = Type -> Type -> Type
 
-using (e : Edges n, ms : Moves n)
+data Discrete : Edges where
+  DiscreteEdges : List (m,t) -> Discrete m t
 
-  data GameTree : Edges n -> Type -> Moves n -> Type where
-    Node : s -> (p : PlayerID n) -> e p s ms -> GameTree e s ms
-    Leaf : s -> Payoff n                     -> GameTree e s ms
+data Continuous : Edges where
+  ContinuousEdges : (m -> t) -> Continuous m t
 
-  data Discrete : Edges n where
-    DiscreteEdges : List (for p ms, GameTree Discrete s ms) -> Discrete p s ms
-  
-  data Continuous : Edges n where
-    ContinuousEdges : (for p ms -> GameTree Continuous s ms) -> Continuous p s ms
+using (ms : Moves n)
+
+  data GameTree : Edges -> Type -> Moves n -> Type where
+    Node : s -> (p : PlayerID n) -> e (for p ms) (GameTree e s ms) -> GameTree e s ms
+    Leaf : s -> Payoff n -> GameTree e s ms
 
   -- | Get the state at the current game node.
   gameState : GameTree e s ms -> s
@@ -32,7 +32,7 @@ using (e : Edges n, ms : Moves n)
   gameState (Leaf s _)   = s
 
   -- | Get the outbound moves from a list of discrete edges.
-  movesFrom : Discrete p s ms -> List (for p ms)
+  movesFrom : Discrete (for p ms) t -> List (for p ms)
   movesFrom (DiscreteEdges es) = map fst es
   
   -- | Get the children from the current game node.
