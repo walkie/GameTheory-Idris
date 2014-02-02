@@ -26,8 +26,8 @@ using (X : Nat -> Type)
   for : Cast (X n) (Fin n) => X n -> VectBy X n a -> a
   for x (MkVectBy v) = index (cast x) v
 
-  -- instance Eq a => Eq (VectBy X n a) where
-    -- (MkVectBy v) == (MkVectBy v') = v == v'
+  instance Eq a => Eq (VectBy X n a) where
+    (MkVectBy v) == (MkVectBy v') = v == v'
   instance Functor (VectBy X n) where
     map f (MkVectBy v) = MkVectBy (map f v)
   instance Foldable (VectBy X n) where
