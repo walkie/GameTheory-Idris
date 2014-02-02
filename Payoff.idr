@@ -71,3 +71,49 @@ showPayoff = showSeq . toList . map showFloat
 showPayoffAsList : Payoff n -> String
 showPayoffAsList p = "[" ++ showPayoff p ++ "]"
 
+
+--
+-- * Static unit tests
+--
+
+test_allBut :
+  so (allBut (player 1) 2 3 == payoff [3]
+   && allBut (player 1) 2 3 == payoff [3,2]
+   && allBut (player 1) 2 3 == payoff [3,2,2]
+   && allBut (player 2) 2 3 == payoff [2,3,2]
+   && allBut (player 3) 2 3 == payoff [2,2,3])
+test_allBut = oh
+
+test_winner :
+  so (winner (player 1) == payoff [0]
+   && winner (player 1) == payoff [1,-1]
+   && winner (player 2) == payoff [-1,1]
+   && winner (player 1) == payoff [2,-1,-1]
+   && winner (player 2) == payoff [-1,2,-1]
+   && winner (player 3) == payoff [-1,-1,2])
+test_winner = oh
+
+test_loser :
+  so (loser (player 1) == payoff [0]
+   && loser (player 1) == payoff [-1,1]
+   && loser (player 2) == payoff [1,-1]
+   && loser (player 1) == payoff [-2,1,1]
+   && loser (player 2) == payoff [1,-2,1]
+   && loser (player 3) == payoff [1,1,-2])
+test_loser = oh
+
+test_tie :
+  so (tie == payoff [0]
+   && tie == payoff [0,0]
+   && tie == payoff [0,0,0])
+test_tie = oh
+
+test_showFloat :
+  so (showFloat 0 == "0"
+   && showFloat 1.0 == "1"
+   && showFloat 2.5 == "2.5")
+test_showFloat = oh
+
+test_showPayoffAsList :
+  so (showPayoffAsList [1,2,3,4.5] == "[1,2,3,4.5]")
+test_showPayoffAsList = oh
