@@ -39,13 +39,43 @@ using (ms : MoveTypes n)
   --   choice to a single player, while leaf nodes yield a payoff for all
   --   players in the game. Every tree node also has an associated game state.
   data GameTree : EdgeType -> StateType -> MoveTypes n -> Type where
-    Node : s -> (p : PlayerID n) -> e (for p ms) (GameTree e s ms) -> GameTree e s ms
+    Node : s -> (i : PlayerID n) -> e (for i ms) (GameTree e s ms) -> GameTree e s ms
     Leaf : s -> Payoff n -> GameTree e s ms
+
+  -- | Returns 'True' if this is an internal node.
+  isNode : GameTree e s ms -> Bool
+  isNode (Node _ _ _) = True
+  isNode (Leaf _ _)   = False
+  
+  -- | Returns 'True' if this is an internal node.
+  isLeaf : GameTree e s ms -> Bool
+  isLeaf (Node _ _ _) = False
+  isLeaf (Leaf _ _)   = True
 
   -- | Get the state at the current game node.
   gameState : GameTree e s ms -> s
   gameState (Node s _ _) = s
   gameState (Leaf s _)   = s
+
+  -- | Get the ID for the player whose turn it is.
+  whoseTurn : (g : GameTree e s ms) -> {default refl p : isNode g = True} -> PlayerID n
+  whoseTurn (Node _ i _) = i
+  whoseTurn (Leaf _ _)     impossible
+
+  -- | Get the ID for the player whose turn it is, if at an internal node.
+  whoseTurn' : GameTree e s ms -> Maybe (PlayerID n)
+  whoseTurn' (Node _ i _) = Just i
+  whoseTurn' (Leaf _ _)   = Nothing
+
+  -- | Get the payoff at the end of a game.
+  outcome : (g : GameTree e s ms) -> {default refl p : isLeaf g = True} -> Payoff n
+  outcome (Node _ _ _)   impossible
+  outcome (Leaf _ o)   = o
+  
+  -- | Get the payoff at the end of a game, if at a leaf node.
+  outcome' : GameTree e s ms -> Maybe (Payoff n)
+  outcome' (Node _ _ _) = Nothing
+  outcome' (Leaf _ o)   = Just o
 
   -- | Get the outbound moves from a list of discrete edges.
   movesFrom : Discrete (for p ms) t -> List (for p ms)
