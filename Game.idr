@@ -58,9 +58,11 @@ using (ms : MoveTypes n)
   gameState (Leaf s _)   = s
 
   -- | Get the ID for the player whose turn it is.
-  whoseTurn : (g : GameTree e s ms) -> {default refl p : isNode g = True} -> PlayerID n
+  whoseTurn : (g : GameTree e s ms)
+           -> {default refl p : isNode g = True}
+           -> PlayerID n
   whoseTurn (Node _ i _) = i
-  whoseTurn (Leaf _ _)     impossible
+  whoseTurn (Leaf _ _)   impossible
 
   -- | Get the ID for the player whose turn it is, if at an internal node.
   whoseTurn' : GameTree e s ms -> Maybe (PlayerID n)
@@ -68,10 +70,12 @@ using (ms : MoveTypes n)
   whoseTurn' (Leaf _ _)   = Nothing
 
   -- | Get the payoff at the end of a game.
-  outcome : (g : GameTree e s ms) -> {default refl p : isLeaf g = True} -> Payoff n
-  outcome (Node _ _ _)   impossible
+  outcome : (g : GameTree e s ms)
+         -> {default refl p : isLeaf g = True}
+         -> Payoff n
+  outcome (Node _ _ _) impossible
   outcome (Leaf _ o)   = o
-  
+
   -- | Get the payoff at the end of a game, if at a leaf node.
   outcome' : GameTree e s ms -> Maybe (Payoff n)
   outcome' (Node _ _ _) = Nothing
