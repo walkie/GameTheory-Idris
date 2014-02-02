@@ -129,84 +129,86 @@ instance Cast (TurnID n) (Fin n) where
   cast (MkTurnID f) = f
 
 
--- * Unit tests
+--
+-- * Static unit tests
+--
 
 test_toPlayerID :
-    so (toPlayerID {n=3} (-1) == Nothing
-     && toPlayerID {n=3} 0    == Nothing
-     && toPlayerID {n=0} 1    == Nothing
-     && toPlayerID {n=1} 1    == Just (MkPlayerID 0)
-     && toPlayerID {n=2} 1    == Just (MkPlayerID 0)
-     && toPlayerID {n=2} 2    == Just (MkPlayerID 1)
-     && toPlayerID {n=3} 2    == Just (MkPlayerID 1)
-     && toPlayerID {n=3} 3    == Just (MkPlayerID 2)
-     && toPlayerID {n=3} 4    == Nothing)
+  so (toPlayerID {n=3} (-1) == Nothing
+   && toPlayerID {n=3} 0    == Nothing
+   && toPlayerID {n=0} 1    == Nothing
+   && toPlayerID {n=1} 1    == Just (MkPlayerID 0)
+   && toPlayerID {n=2} 1    == Just (MkPlayerID 0)
+   && toPlayerID {n=2} 2    == Just (MkPlayerID 1)
+   && toPlayerID {n=3} 2    == Just (MkPlayerID 1)
+   && toPlayerID {n=3} 3    == Just (MkPlayerID 2)
+   && toPlayerID {n=3} 4    == Nothing)
 test_toPlayerID = oh
 
 test_toGameID :
-    so (toGameID {n=3} (-1) == Nothing
-     && toGameID {n=3} 0    == Nothing
-     && toGameID {n=0} 1    == Nothing
-     && toGameID {n=1} 1    == Just (MkGameID 0)
-     && toGameID {n=2} 1    == Just (MkGameID 1)
-     && toGameID {n=3} 1    == Just (MkGameID 2)
-     && toGameID {n=2} 2    == Just (MkGameID 0)
-     && toGameID {n=3} 2    == Just (MkGameID 1)
-     && toGameID {n=3} 3    == Just (MkGameID 0)
-     && toGameID {n=3} 4    == Nothing)
+  so (toGameID {n=3} (-1) == Nothing
+   && toGameID {n=3} 0    == Nothing
+   && toGameID {n=0} 1    == Nothing
+   && toGameID {n=1} 1    == Just (MkGameID 0)
+   && toGameID {n=2} 1    == Just (MkGameID 1)
+   && toGameID {n=3} 1    == Just (MkGameID 2)
+   && toGameID {n=2} 2    == Just (MkGameID 0)
+   && toGameID {n=3} 2    == Just (MkGameID 1)
+   && toGameID {n=3} 3    == Just (MkGameID 0)
+   && toGameID {n=3} 4    == Nothing)
 test_toGameID = oh
 
 test_toTurnID :
-    so (toTurnID {n=3} (-1) == Nothing
-     && toTurnID {n=3} 0    == Nothing
-     && toTurnID {n=0} 1    == Nothing
-     && toTurnID {n=1} 1    == Just (MkTurnID 0)
-     && toTurnID {n=2} 1    == Just (MkTurnID 1)
-     && toTurnID {n=3} 1    == Just (MkTurnID 2)
-     && toTurnID {n=2} 2    == Just (MkTurnID 0)
-     && toTurnID {n=3} 2    == Just (MkTurnID 1)
-     && toTurnID {n=3} 3    == Just (MkTurnID 0)
-     && toTurnID {n=3} 4    == Nothing)
+  so (toTurnID {n=3} (-1) == Nothing
+   && toTurnID {n=3} 0    == Nothing
+   && toTurnID {n=0} 1    == Nothing
+   && toTurnID {n=1} 1    == Just (MkTurnID 0)
+   && toTurnID {n=2} 1    == Just (MkTurnID 1)
+   && toTurnID {n=3} 1    == Just (MkTurnID 2)
+   && toTurnID {n=2} 2    == Just (MkTurnID 0)
+   && toTurnID {n=3} 2    == Just (MkTurnID 1)
+   && toTurnID {n=3} 3    == Just (MkTurnID 0)
+   && toTurnID {n=3} 4    == Nothing)
 test_toTurnID = oh
 
 test_player :
-    so (player {n=1} 1 == MkPlayerID 0
-     && player {n=2} 1 == MkPlayerID 0
-     && player {n=2} 2 == MkPlayerID 1)
+  so (player {n=1} 1 == MkPlayerID 0
+   && player {n=2} 1 == MkPlayerID 0
+   && player {n=2} 2 == MkPlayerID 1)
 test_player = oh
 
 test_game :
-    so (game {n=1} 1 == MkGameID 0
-     && game {n=2} 1 == MkGameID 1
-     && game {n=3} 1 == MkGameID 2
-     && game {n=2} 2 == MkGameID 0
-     && game {n=3} 2 == MkGameID 1
-     && game {n=3} 3 == MkGameID 0)
+  so (game {n=1} 1 == MkGameID 0
+   && game {n=2} 1 == MkGameID 1
+   && game {n=3} 1 == MkGameID 2
+   && game {n=2} 2 == MkGameID 0
+   && game {n=3} 2 == MkGameID 1
+   && game {n=3} 3 == MkGameID 0)
 test_game = oh
 
 test_turn :
-    so (turn {n=1} 1 == MkTurnID 0
-     && turn {n=2} 1 == MkTurnID 1
-     && turn {n=3} 1 == MkTurnID 2
-     && turn {n=2} 2 == MkTurnID 0
-     && turn {n=3} 2 == MkTurnID 1
-     && turn {n=3} 3 == MkTurnID 0)
+  so (turn {n=1} 1 == MkTurnID 0
+   && turn {n=2} 1 == MkTurnID 1
+   && turn {n=3} 1 == MkTurnID 2
+   && turn {n=2} 2 == MkTurnID 0
+   && turn {n=3} 2 == MkTurnID 1
+   && turn {n=3} 3 == MkTurnID 0)
 test_turn = oh
 
 test_forPlayer :
-    so (for (player 1) [7,8,9] == 7
-     && for (player 2) [7,8,9] == 8
-     && for (player 3) [7,8,9] == 9)
+  so (for (player 1) [7,8,9] == 7
+   && for (player 2) [7,8,9] == 8
+   && for (player 3) [7,8,9] == 9)
 test_forPlayer = oh
 
 test_forGame :
-    so (for (game 1) [7,8,9] == 9
-     && for (game 2) [7,8,9] == 8
-     && for (game 3) [7,8,9] == 7)
+  so (for (game 1) [7,8,9] == 9
+   && for (game 2) [7,8,9] == 8
+   && for (game 3) [7,8,9] == 7)
 test_forGame = oh
 
 test_forTurn :
-    so (for (turn 1) [7,8,9] == 9
-     && for (turn 2) [7,8,9] == 8
-     && for (turn 3) [7,8,9] == 7)
+  so (for (turn 1) [7,8,9] == 9
+   && for (turn 2) [7,8,9] == 8
+   && for (turn 3) [7,8,9] == 7)
 test_forTurn = oh
