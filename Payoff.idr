@@ -13,12 +13,16 @@ import VectBy
 -- * Representation
 --
 
--- | Payoffs are represented as a vector of `Float` values where each value
+-- | Payoffs are represented as a vector of 'Float' values where each value
 --   corresponds to a particular player.
 --   While the type of payoffs could be generalized, this representation
 --   supports both cardinal and ordinal payoffs while being easy to work with.
 Payoff : Nat -> Type
 Payoff n = ByPlayer n Float
+
+-- | Create a payoff from a vector.
+payoff : Vect n Float -> Payoff n
+payoff = fromVect
 
 
 --
