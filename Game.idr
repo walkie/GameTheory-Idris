@@ -86,14 +86,14 @@ using (ms : MoveTypes n)
   moves (DiscreteEdges es) = map fst es
 
   -- | Get the outbound moves from the current internal node.
-  --   TODO: Figure out how to avoid 'believe_me' below. Must prove
+  --   TODO: Figure out how to avoid 'really_believe_me' below. Must prove
   --         that 'whoseTurn' returns the same i stored in the 'Node'.
   movesFrom : (g : GameTree Discrete s ms)
            -> {default refl p1 : isNode g = True}
            -> {default refl p2 : whoseTurn g {p = p1} = i}
            -> List (for i ms)
-  movesFrom (Node _ _ e) = believe_me (moves e)
-  movesFrom (Leaf _ _)   impossible
+  movesFrom (Node _ i' e) = really_believe_me (moves e)
+  movesFrom (Leaf _ _)    impossible
 
   -- | Get the children from the current game node.
   children : GameTree Discrete s ms -> List (GameTree Discrete s ms)
@@ -116,13 +116,60 @@ using (ms : MoveTypes n)
   dfs t = t :: concatMap dfs (children t)
 
 
--- Examples
+--
+-- * Static unit tests
+--
+  
+namespace Test
 
-payoff : Payoff 2
-payoff = [2.0, -1.0]
+  TestGame : Type
+  TestGame = GameTree Discrete Char [Bool,Int]
 
-moves : MoveTypes 2
-moves = [Integer, Bool]
+  a : TestGame
+  a = Leaf 'a' [1,2]
+  
+  b : TestGame
+  b = Leaf 'b' [3,4]
+  
+  c : TestGame
+  c = Leaf 'c' [5,6]
+  
+  d : TestGame
+  d = Leaf 'd' [7,8]
 
-ex : GameTree Discrete () [Integer, Bool]
-ex = Node () (player 1) (DiscreteEdges [(1, Leaf () payoff)])
+  e : TestGame
+  e = Node 'e' (player 1) (DiscreteEdges [(True,a),(False,b)])
+  
+  f : TestGame
+  f = Node 'f' (player 1) (DiscreteEdges [(True,c),(False,d)])
+  
+  g : TestGame
+  g = Node 'g' (player 2) (DiscreteEdges [(1,e),(2,f)])
+
+  h : TestGame
+  h = Node 'h' (player 2) (DiscreteEdges [(3,g),(4,e)])
+
+  test_gameState :
+    so (pack (map gameState [a,b,c,d,e,f,g,h]) == "abcdefgh")
+  test_gameState = oh
+
+  test_whoseTurn :
+    so (whoseTurn e == player 1
+     && whoseTurn f == player 1
+     && whoseTurn g == player 2
+     && whoseTurn h == player 2)
+  test_whoseTurn = oh
+
+  test_outcome :
+    so (outcome a == [1,2]
+     && outcome b == [3,4]
+     && outcome c == [5,6]
+     && outcome d == [7,8])
+  test_outcome = oh
+
+  test_movesFrom :
+    so (movesFrom e == [True,False]
+     && movesFrom f == [True,False]
+     && movesFrom g == [1,2]
+     && movesFrom h == [3,4])
+  test_movesFrom = oh
