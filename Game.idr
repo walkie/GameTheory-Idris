@@ -89,14 +89,11 @@ using (ms : MoveTypes n)
   moves (DiscreteEdges es) = map fst es
 
   -- | Get the outbound moves from the current internal node.
-  --   TODO: Figure out how to avoid 'really_believe_me' below. Must prove
-  --         that 'whoseTurn' returns the same i stored in the 'Node'.
   movesFrom : (g : GameTree Discrete s ms)
-           -> {default refl p1 : isNode g = True}
-           -> {default refl p2 : whoseTurn g {p = p1} = i}
-           -> List (for i ms)
-  movesFrom (Node _ i e) {p2 = refl} = moves e
-  movesFrom (Leaf _ _)   {p2 = refl}  impossible
+           -> {default refl p : isNode g = True}
+           -> List (for (whoseTurn g {p}) ms)
+  movesFrom (Node _ _ e) = moves e
+  movesFrom (Leaf _ _)   impossible
 
   -- | Get the children from the current game node.
   children : GameTree Discrete s ms -> List (GameTree Discrete s ms)
