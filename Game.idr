@@ -92,8 +92,8 @@ using (ms : MoveTypes n)
            -> {default refl p1 : isNode g = True}
            -> {default refl p2 : whoseTurn g {p = p1} = i}
            -> List (for i ms)
-  movesFrom (Node _ i' e) = really_believe_me (moves e)
-  movesFrom (Leaf _ _)    impossible
+  movesFrom (Node _ i e) {p2 = refl} = moves e
+  movesFrom (Leaf _ _)   {p2 = refl}  impossible
 
   -- | Get the children from the current game node.
   children : GameTree Discrete s ms -> List (GameTree Discrete s ms)
