@@ -19,6 +19,9 @@ EdgeType = Type -> Type -> Type
 data Discrete : EdgeType where
   DiscreteEdges : List (m,t) -> Discrete m t
 
+instance (Eq m, Eq t) => Eq (Discrete m t) where
+  (DiscreteEdges es) == (DiscreteEdges fs) = es == fs
+
 -- | Continuous tree edges, captured by a function from moves to subsequent
 --   game trees.
 data Continuous : EdgeType where
