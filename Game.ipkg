@@ -1,6 +1,7 @@
 package Game
 
 modules =
+  Data.VectBy,
   Game.Payoff,
   Game.Tree,
   Game.Util,
