@@ -4,9 +4,10 @@
 module Game.Payoff
 
 import Data.Floats
-import Game.Vect
+import Game.ByPlayer
 
 %default total
+
 
 --
 -- * Representation
