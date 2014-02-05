@@ -12,7 +12,7 @@ using (X : Nat -> Type, n : Nat, ts : Vect n Type)
   
   -- | A heterogeneous vector indexed by some type X.
   data HVectBy : (Nat -> Type) -> Vect n Type -> Type where
-    MkHVectBy : {X : Nat -> Type} -> HVect ts -> HVectBy X ts
+    MkHVectBy : HVect ts -> HVectBy X ts
 
   -- | Convert a plain h-vector into an X-indexed h-vector.
   fromHVect : HVect ts -> HVectBy X ts
