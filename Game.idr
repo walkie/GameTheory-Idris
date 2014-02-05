@@ -1,5 +1,6 @@
 module Game
 
+import Util
 import VectBy
 import Payoff
 
@@ -149,6 +150,14 @@ namespace Test
   h : TestGame
   h = Node 'h' (player 2) (DiscreteEdges [(3,g),(4,e)])
 
+  -- TODO for some reason, using this function in types causes really slow
+  --      type checking...
+  gameStates : List TestGame -> String
+  gameStates = pack . map gameState
+
+  sameStates : List TestGame -> List TestGame -> Bool
+  sameStates = (==) `on` map gameState
+
   test_gameState :
     so (pack (map gameState [a,b,c,d,e,f,g,h]) == "abcdefgh")
   test_gameState = oh
@@ -173,3 +182,21 @@ namespace Test
      && movesFrom g == [1,2]
      && movesFrom h == [3,4])
   test_movesFrom = oh
+
+  {- This takes several minutes to type check...
+  test_children :
+    so (all (isNil . children) [a,b,c,d]
+     && sameStates (children e) [a,b])
+     && sameStates (children f) [c,d]
+     && sameStates (children g) [e,f]
+     && sameStates (children h) [g,e])
+  test_children = oh
+  -}
+  
+  test_bfs :
+    so (pack (map gameState (bfs h)) == "hgeefababcd")
+  test_bfs = oh
+
+  test_dfs :
+    so (pack (map gameState (dfs h)) == "hgeabfcdeab")
+  test_dfs = oh
