@@ -7,7 +7,7 @@ import Data.VectBy
 
 
 --
--- * ByTurn vectors
+-- * Turn IDs
 --
 
 -- | Identifies a turn within a game instance.
@@ -26,17 +26,22 @@ turn : (i : Integer) -> {default ItIsJust p : IsJust (toTurnID {n} i)} -> TurnID
 turn {n} i {p} with (toTurnID {n} i)
   turn {n} i {p = ItIsJust} | Just x = x
 
--- | A vector where each element corresponds to a turn in a game instance.
---   A `ByTurn` list of length n is indexed from n down to 1.
-ByTurn : Nat -> Type -> Type
-ByTurn = VectBy TurnID
-
 instance Eq (TurnID n) where
   (MkTurnID f) == (MkTurnID f') = f == f'
 instance Show (TurnID n) where
   show (MkTurnID f) = "Turn " ++ show (cast n - finToInteger f)
 instance Cast (TurnID n) (Fin n) where
   cast (MkTurnID f) = f
+
+
+--
+-- * ByTurn vectors
+--
+
+-- | A vector where each element corresponds to a turn in a game instance.
+--   A `ByTurn` list of length n is indexed from n down to 1.
+ByTurn : Nat -> Type -> Type
+ByTurn = VectBy TurnID
 
 
 --

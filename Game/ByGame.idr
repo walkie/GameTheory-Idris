@@ -7,7 +7,7 @@ import Data.VectBy
 
 
 --
--- * ByGame vectors
+-- * Game IDs
 --
 
 -- | Identifies a game instance within an execution.
@@ -28,17 +28,22 @@ game : (i : Integer) -> {default ItIsJust p : IsJust (toGameID {n} i)} -> GameID
 game {n} i {p} with (toGameID {n} i)
   game {n} i {p = ItIsJust} | Just x = x
 
--- | A vector where each element corresponds to a game instance.
---   A `ByGame` vector of length n is indexed from n down to 1.
-ByGame : Nat -> Type -> Type
-ByGame = VectBy GameID
-
 instance Eq (GameID n) where
   (MkGameID f) == (MkGameID f') = f == f'
 instance Show (GameID n) where
   show (MkGameID f) = "Game " ++ show (cast n - finToInteger f)
 instance Cast (GameID n) (Fin n) where
   cast (MkGameID f) = f
+
+
+--
+-- * ByGame vectors
+--
+
+-- | A vector where each element corresponds to a game instance.
+--   A `ByGame` vector of length n is indexed from n down to 1.
+ByGame : Nat -> Type -> Type
+ByGame = VectBy GameID
 
 
 --

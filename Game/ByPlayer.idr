@@ -7,7 +7,7 @@ import Data.VectBy
 
 
 --
--- * ByPlayer vectors
+-- * Player IDs
 --
 
 -- | Identifies a player within an execution.
@@ -26,17 +26,22 @@ player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {n} i)} -> Pl
 player {n} i {p} with (toPlayerID {n} i)
   player {n} i {p = ItIsJust} | Just x = x
 
--- | A vector where each element corresponds to a player.
---   A `ByPlayer` vector of length n is indexed from 1 up to n.
-ByPlayer : Nat -> Type -> Type
-ByPlayer = VectBy PlayerID
-
 instance Eq (PlayerID n) where
   (MkPlayerID f) == (MkPlayerID f') = f == f'
 instance Show (PlayerID n) where
   show (MkPlayerID f) = "Player " ++ show (cast f + 1)
 instance Cast (PlayerID n) (Fin n) where
   cast (MkPlayerID f) = f
+
+
+--
+-- * ByPlayer vectors
+--
+
+-- | A vector where each element corresponds to a player.
+--   A `ByPlayer` vector of length n is indexed from 1 up to n.
+ByPlayer : Nat -> Type -> Type
+ByPlayer = VectBy PlayerID
 
 
 --
