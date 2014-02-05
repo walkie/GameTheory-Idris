@@ -1,6 +1,7 @@
 -- | Vectors where each element corresponds to a particular player.
 module Game.ByPlayer
 
+import Data.HVectBy
 import Data.VectBy
 
 %default total
@@ -42,6 +43,11 @@ instance Cast (PlayerID n) (Fin n) where
 --   A `ByPlayer` vector of length n is indexed from 1 up to n.
 ByPlayer : Nat -> Type -> Type
 ByPlayer = VectBy PlayerID
+
+-- | An h-vector where each element corresponds to a player.
+--   Indexed from 1 to n.
+ByPlayer' : Vect n Type -> Type
+ByPlayer' = HVectBy PlayerID
 
 
 --
