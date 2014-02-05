@@ -1,4 +1,4 @@
-module Util
+module Game.Util
 
 -- | Haskell's Data.Function.on
 on : (b -> b -> c) -> (a -> b) -> a -> a -> c

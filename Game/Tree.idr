@@ -1,8 +1,8 @@
-module Game
+module Game.Tree
 
-import Util
-import VectBy
-import Payoff
+import Game.Util
+import Game.Vect
+import Game.Payoff
 
 %default total
 

@@ -1,4 +1,4 @@
-module VectBy
+module Game.Vect
 
 %default total
 

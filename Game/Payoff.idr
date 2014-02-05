@@ -1,11 +1,10 @@
 -- | The outcome of a game is a payoff.  This module provides a simple
 --   representation of payoffs, smart constructors for building typical
 --   payoffs, and functions for pretty printing them.
-module Payoff
+module Game.Payoff
 
 import Data.Floats
-
-import VectBy
+import Game.Vect
 
 %default total
 
