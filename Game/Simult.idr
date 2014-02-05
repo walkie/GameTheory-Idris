@@ -2,7 +2,6 @@
 --   of moves. For discrete domains, see 'Game.Normal'.
 module Game.Simult
 
-import Data.HVectBy
 import Game.ByPlayer
 import Game.Payoff
 import Game.Tree
@@ -10,7 +9,7 @@ import Game.Tree
 
 -- | Pure strategy profile; one move per player.
 Profile : MoveTypes n -> Type
-Profile = ByPlayer' . toVect
+Profile = ByPlayer'
   
 -- | A general simultaneous move game. Maps a strategy profile to a payoff.
 data Simult : MoveTypes n -> Type where

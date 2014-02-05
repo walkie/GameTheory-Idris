@@ -2,6 +2,7 @@
 module Game.ByPlayer
 
 import Data.HVectBy
+import Data.HVectListBy
 import Data.VectBy
 
 %default total
@@ -46,8 +47,15 @@ ByPlayer = VectBy PlayerID
 
 -- | An h-vector where each element corresponds to a player.
 --   Indexed from 1 to n.
-ByPlayer' : Vect n Type -> Type
-ByPlayer' = HVectBy PlayerID
+--   TODO Better name?
+ByPlayer' : ByPlayer n Type -> Type
+ByPlayer' = HVectBy PlayerID . toVect
+
+-- | An h-vector of lists where each list corresponds to a player.
+--   Indexed from 1 to n.
+--   TODO Better name?
+ByPlayer'' : ByPlayer n Type -> Type
+ByPlayer'' = HVectListBy PlayerID . toVect
 
 
 --
