@@ -58,9 +58,10 @@ showFloat f = if f == floor f then fst (break (== '.') s) else s
   where s = show f
 
 -- | Show a list of strings as a comma-separated sequence.
+--   TODO bug in Idris requires qualified Nil below.
 showSeq : List String -> String
 showSeq []        = ""
-showSeq (s :: []) = s
+showSeq (s :: List.Nil) = s
 showSeq (s :: ss) = s ++ "," ++ showSeq ss
 
 -- | String representation of a Payoff.
