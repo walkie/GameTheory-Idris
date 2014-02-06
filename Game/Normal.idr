@@ -16,6 +16,11 @@ import Game.Util
 data Normal : Nat -> Nat -> Type -> Type -> Type where
   MkNormal : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) (Payoff 2) -> Normal n1 n2 m1 m2
 
+
+--
+-- * Smart Constructors
+--
+
 -- | Construct a two-player symmetric game.
 symmetric : Vect (S n) m -> Vect (S n * S n) Float -> Normal (S n) (S n) m m
 symmetric {n} ms vs = MkNormal ms ms (map pay range)
@@ -31,7 +36,8 @@ symmetric {n} ms vs = MkNormal ms ms (map pay range)
 -- | Construct a two-player zero-sum game. The payoffs are given from the
 --   first player's perspective.
 matrix : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) Float -> Normal n1 n2 m1 m2
-matrix ms1 ms2 vs = MkNormal ms1 ms2 (map pay vs)
-  where
-    pay : Float -> Payoff 2
-    pay v = payoff [v,-v]
+matrix ms1 ms2 vs = MkNormal ms1 ms2 (map (\v => payoff [v,-v]) vs)
+
+-- | Construct a two-player symmetric zero-sum game.
+square : Vect n m -> Vect (n*n) Float -> Normal n n m m
+square ms vs = MkNormal ms ms (map (\v => payoff [v,-v]) vs)
