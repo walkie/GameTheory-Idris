@@ -33,11 +33,15 @@ symmetric {n} ms vs = MkNormal ms ms (map pay range)
     pay : Fin (S n * S n) -> Payoff 2
     pay i = payoff [index i vs, index (sym i) vs]
 
+-- | Construct a zero-sum payoff vector from a vector of floats.
+zerosum : Vect n Float -> Vect n (Payoff 2)
+zerosum = map (\v => payoff [v,-v])
+
 -- | Construct a two-player zero-sum game. The payoffs are given from the
 --   first player's perspective.
 matrix : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) Float -> Normal n1 n2 m1 m2
-matrix ms1 ms2 vs = MkNormal ms1 ms2 (map (\v => payoff [v,-v]) vs)
+matrix ms1 ms2 vs = MkNormal ms1 ms2 (zerosum vs)
 
 -- | Construct a two-player symmetric zero-sum game.
 square : Vect n m -> Vect (n*n) Float -> Normal n n m m
-square ms vs = MkNormal ms ms (map (\v => payoff [v,-v]) vs)
+square ms vs = MkNormal ms ms (zerosum vs)
