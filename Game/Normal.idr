@@ -15,7 +15,7 @@ import Game.Util
 -- | A two-player normal form game.
 data Normal : Nat -> Nat -> Type -> Type -> Type where
   MkNormal : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) (Payoff 2) -> Normal n1 n2 m1 m2
-    
+
 -- | Construct a two-player symmetric game.
 symmetric : Vect (S n) m -> Vect (S n * S n) Float -> Normal (S n) (S n) m m
 symmetric {n} ms vs = MkNormal ms ms (map pay range)
@@ -27,3 +27,11 @@ symmetric {n} ms vs = MkNormal ms ms (map pay range)
     
     pay : Fin (S n * S n) -> Payoff 2
     pay i = payoff [index i vs, index (sym i) vs]
+
+-- | Construct a two-player zero-sum game. The payoffs are given from the
+--   first player's perspective.
+matrix : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) Float -> Normal n1 n2 m1 m2
+matrix ms1 ms2 vs = MkNormal ms1 ms2 (map pay vs)
+  where
+    pay : Float -> Payoff 2
+    pay v = payoff [v,-v]
