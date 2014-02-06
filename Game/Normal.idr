@@ -16,6 +16,18 @@ import Game.Util
 data Normal : Nat -> Nat -> Type -> Type -> Type where
   MkNormal : Vect n1 m1 -> Vect n2 m2 -> Vect (n1*n2) (Payoff 2) -> Normal n1 n2 m1 m2
 
+-- | Get the moves for player 1.
+movesPlayer1 : Normal n1 n2 m1 m2 -> Vect n1 m1
+movesPlayer1 (MkNormal ms _ _) = ms
+
+-- | Get the moves for player 2.
+movesPlayer2 : Normal n1 n2 m1 m2 -> Vect n2 m2
+movesPlayer2 (MkNormal _ ms _) = ms
+
+-- | Get the payoff vector for this game.
+payoffVect : Normal n1 n2 m1 m2 -> Vect (n1*n2) (Payoff 2)
+payoffVect (MkNormal _ _ vs) = vs
+
 
 --
 -- * Smart Constructors
