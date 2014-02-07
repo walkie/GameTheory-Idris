@@ -6,6 +6,7 @@ module Game.Normal
 
 import Data.Matrix
 import Game.Payoff
+import Game.Tree
 import Game.Util
 
 
@@ -28,6 +29,15 @@ movesPlayer2 (MkNormal _ ms _) = ms
 -- | Get the payoff matrix for this game.
 payoffMatrix : Normal n1 n2 m1 m2 -> Matrix n1 n2 (Payoff 2)
 payoffMatrix (MkNormal _ _ vs) = vs
+
+-- | Convert a normal form game into a game tree.
+gameTree : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
+gameTree (MkNormal ms1 ms2 vs) =
+  Node () (player 1) (DiscreteEdges (toList' (zipWith (\r,m1 => (m1,
+    Node () (player 2) (DiscreteEdges (toList' (zipWith (\c,m2 => (m2,
+      Leaf () (index r c vs)
+    )) range ms2)))
+  )) range ms1)))
 
 
 --
