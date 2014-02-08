@@ -41,7 +41,6 @@ using (n : Nat, ts : Vect n Type)
 -- * Indexing operations
 --
 
-
   -- | Return the list at index 'i'.
   index : (i : Fin n) -> HVectList ts -> List (index i ts)
   index fZ     (x :: xs) = x
@@ -77,8 +76,27 @@ using (n : Nat, ts : Vect n Type)
 -- * Other operations
 --
 
-  -- | Concatenate to heterogeneous vectors of lists.
+  -- | Concatenate two heterogeneous vectors of lists.
   (++) : {us : Vect l Type} -> HVectList ts -> HVectList us -> HVectList (ts ++ us)
   (++) []        ys = ys
   (++) (x :: xs) ys = x :: (xs ++ ys)
 
+  -- | Computes the n-ary cartesian product of the lists within an `HVectList`.
+  --   For example:
+  --   >> cartesian [[1,2,3],['a','b']]
+  --   [[1,'a'],[1,'b'],[2,'a'],[2,'b'],[3,'a'],[3,'b']]
+  cartesianProduct : HVectList ts -> List (HVect ts)
+  cartesianProduct Nil       = [Nil]
+  cartesianProduct (xs::xss) = concatMap (\x => map (x ::) (cartesianProduct xss)) xs
+
+
+--
+-- * Static unit tests
+--
+
+namespace Test
+  
+  test_cartesianProduct :
+    so (cartesianProduct [[1,2,3],['a','b']]
+          == [[1,'a'],[1,'b'],[2,'a'],[2,'b'],[3,'a'],[3,'b']])
+  test_cartesianProduct = oh
