@@ -2,15 +2,11 @@
 --   of moves. For discrete domains, see 'Game.Normal'.
 module Game.Simult
 
-import Game.ByPlayer
 import Game.Payoff
+import Game.Profile
 import Game.Tree
 
 
--- | Pure strategy profile; one move per player.
-Profile : MoveTypes np -> Type
-Profile = ByPlayer'
-  
 -- | A general simultaneous move game. Maps a strategy profile to a payoff.
 data Simult : MoveTypes np -> Type where
   MkSimult : {mvs : MoveTypes np} -> (Profile mvs -> Payoff np) -> Simult mvs

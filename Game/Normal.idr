@@ -6,6 +6,7 @@ module Game.Normal
 
 import Data.Matrix
 import Game.Payoff
+import Game.Profile
 import Game.Simult
 import Game.Tree
 import Game.Util
