@@ -6,6 +6,7 @@ module Game.Normal
 
 import Data.Matrix
 import Game.Payoff
+import Game.Simult
 import Game.Tree
 import Game.Util
 
@@ -30,6 +31,35 @@ movesP2 (MkNormal _ ms _) = ms
 payoffMatrix : Normal n1 n2 m1 m2 -> Matrix n1 n2 (Payoff 2)
 payoffMatrix (MkNormal _ _ vs) = vs
 
+
+--
+-- * Game resolution
+--
+
+-- | Get the index of a move for player 1.
+moveIndexP1 : Eq m1 => m1 -> Normal n1 n2 m1 m2 -> Maybe (Fin n1)
+moveIndexP1 {n1} m (MkNormal ms _ vs) with (elemIndex m ms)
+  | Just i = natToFin i n1
+  | _      = Nothing
+
+-- | Get the index of a move for player 2.
+moveIndexP2 : Eq m2 => m2 -> Normal n1 n2 m1 m2 -> Maybe (Fin n2)
+moveIndexP2 {n2} m (MkNormal _ ms vs) with (elemIndex m ms)
+  | Just i = natToFin i n2
+  | _      = Nothing
+
+-- | Lookup the result of strategy profile in the payoff matrix.
+lookupPayoff : (Eq m1, Eq m2) => Profile [m1,m2] -> Normal n1 n2 m1 m2 -> Maybe (Payoff 2)
+lookupPayoff {n1} {n2} (MkHVectBy [m1,m2]) n = do
+  r <- moveIndexP1 m1 n
+  c <- moveIndexP2 m2 n
+  return (index r c (payoffMatrix n))
+
+
+--
+-- * Conversion to other game types
+--
+
 -- | Convert a normal form game into a game tree.
 toGameTree : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
 toGameTree (MkNormal ms1 ms2 vs) =
@@ -38,6 +68,12 @@ toGameTree (MkNormal ms1 ms2 vs) =
       Leaf () (index r c vs)
     )) range ms2)))
   )) range ms1)))
+
+-- | Convert a normal form game into a simultaneous move game. Yields the
+--   provided default payoff for any strategy profile that is not included
+--   in the normal form game.
+toSimult : (Eq m1, Eq m2) => Payoff 2 -> Normal n1 n2 m1 m2 -> Simult [m1,m2]
+toSimult def n = MkSimult (\p => fromMaybe def (lookupPayoff p n))
 
 
 --
