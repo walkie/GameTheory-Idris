@@ -10,7 +10,7 @@ import Data.HVect
 
 
 --
--- * Heterogeneous vectors of lists
+-- * Representation
 --
 
 using (n : Nat, ts : Vect n Type)
@@ -27,6 +27,20 @@ using (n : Nat, ts : Vect n Type)
   -- | Pop the first list in the vector.
   tail : HVectList (t :: ts) -> HVectList ts
   tail (xs :: xss) = xss
+
+  instance Eq (HVectList Nil) where
+    _ == _ = True
+
+  instance (Eq t, Eq (HVectList ts)) => Eq (HVectList (t::ts)) where
+    (x :: xs) == (y :: ys) = x == y && xs == ys
+
+  -- TODO Add Show machinery?
+
+
+--
+-- * Indexing operations
+--
+
 
   -- | Return the list at index 'i'.
   index : (i : Fin n) -> HVectList ts -> List (index i ts)
@@ -58,15 +72,13 @@ using (n : Nat, ts : Vect n Type)
   updateAt fZ     f (x :: xs) = f x :: xs
   updateAt (fS j) f (x :: xs) =   x :: updateAt j f xs
 
+
+--
+-- * Other operations
+--
+
   -- | Concatenate to heterogeneous vectors of lists.
   (++) : {us : Vect l Type} -> HVectList ts -> HVectList us -> HVectList (ts ++ us)
   (++) []        ys = ys
   (++) (x :: xs) ys = x :: (xs ++ ys)
 
-  instance Eq (HVectList Nil) where
-    _ == _ = True
-
-  instance (Eq t, Eq (HVectList ts)) => Eq (HVectList (t::ts)) where
-    (x :: xs) == (y :: ys) = x == y && xs == ys
-
-  -- TODO Add Show machinery?
