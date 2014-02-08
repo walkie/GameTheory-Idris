@@ -48,14 +48,14 @@ ByPlayer = VectBy PlayerID
 -- | An h-vector where each element corresponds to a player.
 --   Indexed from 1 to n.
 --   TODO Better name?
-ByPlayer' : ByPlayer n Type -> Type
-ByPlayer' = HVectBy PlayerID . toVect
+ByPlayerH : ByPlayer n Type -> Type
+ByPlayerH = HVectBy PlayerID . toVect
 
 -- | An h-vector of lists where each list corresponds to a player.
 --   Indexed from 1 to n.
 --   TODO Better name?
-ByPlayer'' : ByPlayer n Type -> Type
-ByPlayer'' = HVectListBy PlayerID . toVect
+ByPlayerHL : ByPlayer n Type -> Type
+ByPlayerHL = HVectListBy PlayerID . toVect
 
 
 --

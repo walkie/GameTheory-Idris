@@ -6,4 +6,4 @@ import Game.ByPlayer
 
 -- | Pure strategy profile; one move per player.
 Profile : MoveTypes np -> Type
-Profile = ByPlayer'
+Profile = ByPlayerH
