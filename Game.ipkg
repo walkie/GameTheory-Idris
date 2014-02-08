@@ -13,5 +13,6 @@ modules =
   Game.Payoff,
   Game.Profile,
   Game.Simult,
+  Game.StateBased,
   Game.Tree,
   Game.Util
