@@ -5,6 +5,7 @@ import Data.HVectList
 
 %default total
 
+
 --
 -- * X-indexed heterogeneous vectors of lists
 --

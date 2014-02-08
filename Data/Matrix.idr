@@ -1,5 +1,7 @@
 module Data.Matrix
 
+%default total
+
 
 --
 -- * Two-dimensional matrices

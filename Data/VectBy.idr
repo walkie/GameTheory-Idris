@@ -2,6 +2,7 @@ module Data.VectBy
 
 %default total
 
+
 --
 -- * X-indexed vectors
 --

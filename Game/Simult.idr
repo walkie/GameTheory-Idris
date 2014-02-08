@@ -6,6 +6,8 @@ import Game.Payoff
 import Game.Profile
 import Game.Tree
 
+%default total
+
 
 -- | A general simultaneous move game. Maps a strategy profile to a payoff.
 data Simult : MoveTypes np -> Type where

@@ -4,6 +4,7 @@ import Data.HVect
 
 %default total
 
+
 --
 -- * X-indexed heterogeneous vectors
 --

@@ -11,6 +11,8 @@ import Game.Simult
 import Game.Tree
 import Game.Util
 
+%default total
+
 
 --
 -- * Representation
