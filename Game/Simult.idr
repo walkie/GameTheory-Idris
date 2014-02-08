@@ -8,20 +8,20 @@ import Game.Tree
 
 
 -- | Pure strategy profile; one move per player.
-Profile : MoveTypes n -> Type
+Profile : MoveTypes np -> Type
 Profile = ByPlayer'
   
 -- | A general simultaneous move game. Maps a strategy profile to a payoff.
-data Simult : MoveTypes n -> Type where
-  MkSimult : {ms : MoveTypes n} -> (Profile ms -> Payoff n) -> Simult ms
+data Simult : MoveTypes np -> Type where
+  MkSimult : {mvs : MoveTypes np} -> (Profile mvs -> Payoff np) -> Simult mvs
 
 -- | Get the payoff function for a simultaneous game.
-payoffFun : {ms : MoveTypes n} -> Simult ms -> Profile ms -> Payoff n
+payoffFun : {mvs : MoveTypes np} -> Simult mvs -> Profile mvs -> Payoff np
 payoffFun (MkSimult f) = f
 
 -- | Captures games that can be converted into a simultaneous move game.
-class IsSimult (g : MoveTypes n -> Type) where
-  toSimult : g ms -> Simult ms
+class IsSimult (g : MoveTypes np -> Type) where
+  toSimult : g mvs -> Simult mvs
 
-instance IsSimult (Simult {n}) where
+instance IsSimult (Simult {np}) where
   toSimult = id
