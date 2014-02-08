@@ -9,13 +9,21 @@ module Data.Matrix
 Matrix : Nat -> Nat -> Type -> Type
 Matrix rows cols a = Vect rows (Vect cols a)
 
+-- | Build a matrix from a generator function.
+buildMatrix : (Fin rows -> Fin cols -> a) -> Matrix rows cols a
+buildMatrix f = map (\r => map (f r) range) range
+
 -- | Lookup a value in a matrix.
 index : Fin rows -> Fin cols -> Matrix rows cols a -> a
 index r c = index c . index r
 
--- | Build a matrix from a generator function.
-buildMatrix : (Fin rows -> Fin cols -> a) -> Matrix rows cols a
-buildMatrix f = map (\r => map (f r) range) range
+-- | Get a particular row of the matrix.
+row : Fin rows -> Matrix rows cols a -> Vect cols a
+row = index
+
+-- | Get a particular column of the matrix.
+col : Fin cols -> Matrix rows cols a -> Vect rows a
+col = map . index
 
 
 --
