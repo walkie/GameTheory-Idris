@@ -19,20 +19,20 @@ data Normal : Nat -> Nat -> Type -> Type -> Type where
   MkNormal : Vect n1 m1 -> Vect n2 m2 -> Matrix n1 n2 (Payoff 2) -> Normal n1 n2 m1 m2
 
 -- | Get the moves for player 1.
-movesPlayer1 : Normal n1 n2 m1 m2 -> Vect n1 m1
-movesPlayer1 (MkNormal ms _ _) = ms
+movesP1 : Normal n1 n2 m1 m2 -> Vect n1 m1
+movesP1 (MkNormal ms _ _) = ms
 
 -- | Get the moves for player 2.
-movesPlayer2 : Normal n1 n2 m1 m2 -> Vect n2 m2
-movesPlayer2 (MkNormal _ ms _) = ms
+movesP2 : Normal n1 n2 m1 m2 -> Vect n2 m2
+movesP2 (MkNormal _ ms _) = ms
 
 -- | Get the payoff matrix for this game.
 payoffMatrix : Normal n1 n2 m1 m2 -> Matrix n1 n2 (Payoff 2)
 payoffMatrix (MkNormal _ _ vs) = vs
 
 -- | Convert a normal form game into a game tree.
-gameTree : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
-gameTree (MkNormal ms1 ms2 vs) =
+toGameTree : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
+toGameTree (MkNormal ms1 ms2 vs) =
   Node () (player 1) (DiscreteEdges (toList' (zipWith (\r,m1 => (m1,
     Node () (player 2) (DiscreteEdges (toList' (zipWith (\c,m2 => (m2,
       Leaf () (index r c vs)
