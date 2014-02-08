@@ -28,6 +28,11 @@ player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {np} i)} -> P
 player {np} i {p} with (toPlayerID {np} i)
   player {np} i {p = ItIsJust} | Just x = x
 
+-- | Get the next player in order.
+nextPlayer : PlayerID (S np) -> PlayerID (S np)
+nextPlayer {np} (MkPlayerID i) = MkPlayerID i'
+  where i' = fromMaybe fZ (natToFin (S (finToNat i)) (S np))
+
 instance Eq (PlayerID np) where
   (MkPlayerID f) == (MkPlayerID f') = f == f'
 instance Show (PlayerID np) where
@@ -85,3 +90,9 @@ test_forPlayer :
    && for (player 2) [7,8,9] == 8
    && for (player 3) [7,8,9] == 9)
 test_forPlayer = oh
+
+test_nextPlayer :
+  so (nextPlayer (player {np=3} 1) == player 2
+   && nextPlayer (player {np=3} 2) == player 3
+   && nextPlayer (player {np=3} 3) == player 1)
+test_nextPlayer = oh
