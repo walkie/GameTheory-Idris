@@ -20,6 +20,14 @@ using (n : Nat, ts : Vect n Type)
     Nil  : HVectList Nil
     (::) : List t -> HVectList ts -> HVectList (t :: ts)
 
+  -- | Get the first list in the vector.
+  head : HVectList (t :: ts) -> List t
+  head (xs :: xss) = xs
+  
+  -- | Pop the first list in the vector.
+  tail : HVectList (t :: ts) -> HVectList ts
+  tail (xs :: xss) = xss
+
   -- | Return the list at index 'i'.
   index : (i : Fin n) -> HVectList ts -> List (index i ts)
   index fZ     (x :: xs) = x
