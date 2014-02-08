@@ -64,3 +64,20 @@ takeTurnsD end avail exec pay = tree
       | False = Node s i (DiscreteEdges (map
                            (\m => (m, tree (exec s i m) (nextPlayer i)))
                            (avail s i)))
+
+
+-- | Build a continuous game tree by taking turns, making moves until some
+--   condition is met.
+takeTurnsC :
+     {s : Type} -> {np : Nat} -> {mvs : MoveTypes (S np)}
+  -> (s -> PlayerID (S np) -> Bool)                   -- ^ Is the game over?
+  -> (s -> (i : PlayerID (S np)) -> for i mvs -> s)   -- ^ Execute a move and return the new state.
+  -> (s -> PlayerID (S np) -> Payoff (S np))          -- ^ Payoff for this (final) state.
+  -> s                                                -- ^ The initial state.
+  -> PlayerID (S np)                                  -- ^ The ID of the initial player.
+  -> GameTree Continuous s mvs
+takeTurnsC end exec pay = tree
+  where
+    tree s i with (end s i)
+      | True  = Leaf s (pay s i)
+      | False = Node s i (ContinuousEdges (\m => (tree (exec s i m) (nextPlayer i))))
