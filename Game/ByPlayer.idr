@@ -15,24 +15,24 @@ import Data.VectBy
 -- | Identifies a player within an execution.
 --   Construct using the `toPlayerID` or `player` functions.
 data PlayerID : Nat -> Type where
-  MkPlayerID : Fin n -> PlayerID n
+  MkPlayerID : Fin np -> PlayerID np
 
 -- | Construct a `PlayerID` from an integer from 1 to n, where n is the
 --   number of players in this execution.
-toPlayerID : Integer -> Maybe (PlayerID n)
-toPlayerID {n} i = map MkPlayerID (integerToFin (i-1) n)
+toPlayerID : Integer -> Maybe (PlayerID np)
+toPlayerID {np} i = map MkPlayerID (integerToFin (i-1) np)
 
 -- | Construct a `PlayerID` from an integer that is statically ensured to be
 --   within range.
-player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {n} i)} -> PlayerID n
-player {n} i {p} with (toPlayerID {n} i)
-  player {n} i {p = ItIsJust} | Just x = x
+player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {np} i)} -> PlayerID np
+player {np} i {p} with (toPlayerID {np} i)
+  player {np} i {p = ItIsJust} | Just x = x
 
-instance Eq (PlayerID n) where
+instance Eq (PlayerID np) where
   (MkPlayerID f) == (MkPlayerID f') = f == f'
-instance Show (PlayerID n) where
+instance Show (PlayerID np) where
   show (MkPlayerID f) = "Player " ++ show (cast f + 1)
-instance Cast (PlayerID n) (Fin n) where
+instance Cast (PlayerID np) (Fin np) where
   cast (MkPlayerID f) = f
 
 
@@ -63,21 +63,21 @@ ByPlayerHL = HVectListBy PlayerID . toVect
 --
 
 test_toPlayerID :
-  so (toPlayerID {n=3} (-1) == Nothing
-   && toPlayerID {n=3} 0    == Nothing
-   && toPlayerID {n=0} 1    == Nothing
-   && toPlayerID {n=1} 1    == Just (MkPlayerID 0)
-   && toPlayerID {n=2} 1    == Just (MkPlayerID 0)
-   && toPlayerID {n=2} 2    == Just (MkPlayerID 1)
-   && toPlayerID {n=3} 2    == Just (MkPlayerID 1)
-   && toPlayerID {n=3} 3    == Just (MkPlayerID 2)
-   && toPlayerID {n=3} 4    == Nothing)
+  so (toPlayerID {np=3} (-1) == Nothing
+   && toPlayerID {np=3} 0    == Nothing
+   && toPlayerID {np=0} 1    == Nothing
+   && toPlayerID {np=1} 1    == Just (MkPlayerID 0)
+   && toPlayerID {np=2} 1    == Just (MkPlayerID 0)
+   && toPlayerID {np=2} 2    == Just (MkPlayerID 1)
+   && toPlayerID {np=3} 2    == Just (MkPlayerID 1)
+   && toPlayerID {np=3} 3    == Just (MkPlayerID 2)
+   && toPlayerID {np=3} 4    == Nothing)
 test_toPlayerID = oh
 
 test_player :
-  so (player {n=1} 1 == MkPlayerID 0
-   && player {n=2} 1 == MkPlayerID 0
-   && player {n=2} 2 == MkPlayerID 1)
+  so (player {np=1} 1 == MkPlayerID 0
+   && player {np=2} 1 == MkPlayerID 0
+   && player {np=2} 2 == MkPlayerID 1)
 test_player = oh
 
 test_forPlayer :
