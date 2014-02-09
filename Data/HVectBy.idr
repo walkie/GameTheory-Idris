@@ -28,7 +28,12 @@ using (X : Nat -> Type, n : Nat, ts : Vect n Type)
         (x : X n) -> HVectBy X ts -> index (cast x) ts
   for x (MkHVectBy v) = index (cast x) v
 
-  
+  -- | Replace in an X-indexed h-vector.
+  replaceFor : Cast (X n) (Fin n) =>
+               (x : X n) -> t -> HVectBy X ts -> HVectBy X (replaceAt (cast x) t ts)
+  replaceFor x a (MkHVectBy v) = MkHVectBy (replaceAt (cast x) a v)
+
+
   instance Eq (HVectBy X Nil) where
     _ == _ = True
   

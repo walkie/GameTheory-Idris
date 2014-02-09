@@ -26,7 +26,11 @@ using (X : Nat -> Type)
   for : Cast (X n) (Fin n) => X n -> VectBy X n a -> a
   for x (MkVectBy v) = index (cast x) v
 
-  
+  -- | Replace in an X-indexed vector.
+  replaceFor : Cast (X n) (Fin n) => X n -> a -> VectBy X n a -> VectBy X n a
+  replaceFor x a (MkVectBy v) = MkVectBy (replaceAt (cast x) a v)
+
+
   instance Eq a => Eq (VectBy X n a) where
     (MkVectBy v) == (MkVectBy v') = v == v'
   
