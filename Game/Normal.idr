@@ -111,6 +111,10 @@ allProfiles : Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
 allProfiles {m1} {m2} (MkNormal ms1 ms2 _) =
   allProfiles {mvs = fromVect [m1,m2]} (fromHVectList [toList ms1, toList ms2])
 
+
+-- ** Nash equilbria
+--
+
 -- | Is the given solution stable? True if neither player will benefit by
 --   unilaterally changing their move.
 stable : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> Profile [m1,m2] -> Bool
@@ -120,10 +124,32 @@ stable n (MkHVectBy [m1,m2]) with (moveIndexP1 m1 n, moveIndexP2 m2 n)
                           all (on (>=) (VectBy.for (player 1)) v) (col c vs)
                        && all (on (>=) (VectBy.for (player 2)) v) (row r vs)
   | _ = False -- bad input
-        
+
 -- | All pure Nash equilibrium solutions.
 nash : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
 nash n = filter (stable n) (allProfiles n)
+
+
+-- ** Pareto efficiency
+--
+
+-- | Is the second solution a Pareto improvement on the first? True if at
+--   least one player's payoff is larger and the other's is not smaller.
+improve : (Eq m1, Eq m2) =>
+          Normal n1 n2 m1 m2 -> Profile [m1,m2] -> Profile [m1,m2] -> Bool
+improve n s s' with (lookupPayoff s n, lookupPayoff s' n)
+  | (Just (MkVectBy [v1,v2]), Just (MkVectBy [v1',v2'])) =
+      (v1' > v1 && v2' >= v2) || (v1' >= v1 && v2' > v2)
+  | _ = False -- bad input
+
+-- | Is the given solution Pareto optimal? True if the only way to increase
+--   one player's payoff is by decreasing another's.
+optimal : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> Profile [m1,m2] -> Bool
+optimal n s = all (not . improve n s) (allProfiles n)
+        
+-- | All strong Pareto optimal solutions.
+pareto : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
+pareto n = filter (optimal n) (allProfiles n)
 
 
 --
