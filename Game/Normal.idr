@@ -162,7 +162,20 @@ pareto n = filter (optimal n) (allProfiles n)
 
 namespace Test
 
+  -- | Prisoner's dilemma.
+  t_pd : Symmetric 2 Char
+  t_pd = symmetric ['C','D'] [[2,0],[3,1]]
+
+  -- | Stag hunt.
+  t_sh : Symmetric 2 Char
+  t_sh = symmetric ['C','D'] [[2,0],[1,1]]
+
   test_nash :
-    so (nash (symmetric ['C','D'] [[2,0],[3,1]]) == [profile ['D','D']]
-     && nash (symmetric ['C','D'] [[2,0],[1,1]]) == [profile ['C','C'], profile ['D','D']])
+    so (nash t_pd == [profile ['D','D']]
+     && nash t_sh == [profile ['C','C'], profile ['D','D']])
   test_nash = oh
+
+  test_pareto :
+    so (pareto t_pd == [profile ['C','C'], profile ['C','D'], profile ['D','C']]
+     && pareto t_sh == [profile ['C','C']])
+  test_pareto = oh
