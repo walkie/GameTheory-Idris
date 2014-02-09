@@ -113,8 +113,8 @@ allProfiles {m1} {m2} (MkNormal ms1 ms2 _) =
 
 -- | Is the given solution stable? True if neither player will benefit by
 --   unilaterally changing their move.
-stable : (Eq m1, Eq m2) => Profile [m1,m2] -> Normal n1 n2 m1 m2 -> Bool
-stable (MkHVectBy [m1,m2]) n with (moveIndexP1 m1 n, moveIndexP2 m2 n)
+stable : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> Profile [m1,m2] -> Bool
+stable n (MkHVectBy [m1,m2]) with (moveIndexP1 m1 n, moveIndexP2 m2 n)
   | (Just r, Just c) = let vs = payoffMatrix n in
                        let v  = index r c vs   in
                           all (on (>=) (VectBy.for (player 1)) v) (col c vs)
@@ -123,7 +123,7 @@ stable (MkHVectBy [m1,m2]) n with (moveIndexP1 m1 n, moveIndexP2 m2 n)
         
 -- | All pure Nash equilibrium solutions.
 nash : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
-nash n = filter (\p => stable p n) (allProfiles n)
+nash n = filter (stable n) (allProfiles n)
 
 
 --
