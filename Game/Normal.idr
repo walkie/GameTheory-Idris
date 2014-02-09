@@ -83,8 +83,12 @@ toSimult def n = MkSimult (\p => fromMaybe def (lookupPayoff p n))
 -- * Smart Constructors
 --
 
+-- | Type of symmetric normal form games.
+Symmetric : Nat -> Type -> Type
+Symmetric n m = Normal n n m m
+
 -- | Construct a two-player symmetric game.
-symmetric : Vect n m -> Matrix n n Float -> Normal n n m m
+symmetric : Vect n m -> Matrix n n Float -> Symmetric n m
 symmetric ms vs = MkNormal ms ms (buildMatrix pay)
   where pay r c = payoff [index r c vs, index c r vs]
 
@@ -98,7 +102,7 @@ matrix : Vect n1 m1 -> Vect n2 m2 -> Matrix n1 n2 Float -> Normal n1 n2 m1 m2
 matrix ms1 ms2 vs = MkNormal ms1 ms2 (zerosum vs)
 
 -- | Construct a two-player symmetric zero-sum game.
-square : Vect n m -> Matrix n n Float -> Normal n n m m
+square : Vect n m -> Matrix n n Float -> Symmetric n m
 square ms vs = MkNormal ms ms (zerosum vs)
 
 
