@@ -101,7 +101,26 @@ matrix ms1 ms2 vs = MkNormal ms1 ms2 (zerosum vs)
 square : Vect n m -> Matrix n n Float -> Normal n n m m
 square ms vs = MkNormal ms ms (zerosum vs)
 
+
+--
+-- * Equilibrium solutions
+--
+
 -- | A list of all pure strategy profiles.
 allProfiles : Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
 allProfiles {m1} {m2} (MkNormal ms1 ms2 _) =
   allProfiles {mvs = fromVect [m1,m2]} (fromHVectList [toList ms1, toList ms2])
+
+-- | Is the given solution stable? True if neither player will benefit by
+--   unilaterally changing their move.
+stable : (Eq m1, Eq m2) => Profile [m1,m2] -> Normal n1 n2 m1 m2 -> Bool
+stable (MkHVectBy [m1,m2]) n with (moveIndexP1 m1 n, moveIndexP2 m2 n)
+  | (Just r, Just c) = let vs = payoffMatrix n in
+                       let v  = index r c vs   in
+                          all (on (<=) (VectBy.for (player 1)) v) (row r vs)
+                       && all (on (<=) (VectBy.for (player 2)) v) (col c vs)
+  | _ = False -- bad input
+        
+-- | All pure Nash equilibrium solutions.
+nash : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
+nash n = filter (\p => stable p n) (allProfiles n)
