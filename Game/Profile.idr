@@ -17,5 +17,5 @@ profile : {mvs : MoveTypes np} -> HVect (toVect mvs) -> Profile mvs
 profile = MkHVectBy
 
 -- | A list of all pure strategy profiles.
-allProfiles : {mvs : MoveTypes np} -> ByPlayerHL mvs  -> List (Profile mvs)
+allProfiles : {mvs : MoveTypes np} -> ByPlayerHL mvs -> List (Profile mvs)
 allProfiles = map profile . cartesianProduct . toHVectList

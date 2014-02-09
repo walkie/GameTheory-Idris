@@ -100,3 +100,8 @@ matrix ms1 ms2 vs = MkNormal ms1 ms2 (zerosum vs)
 -- | Construct a two-player symmetric zero-sum game.
 square : Vect n m -> Matrix n n Float -> Normal n n m m
 square ms vs = MkNormal ms ms (zerosum vs)
+
+-- | A list of all pure strategy profiles.
+allProfiles : Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
+allProfiles {m1} {m2} (MkNormal ms1 ms2 _) =
+  allProfiles {mvs = fromVect [m1,m2]} (fromHVectList [toList ms1, toList ms2])
