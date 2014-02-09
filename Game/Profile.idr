@@ -13,7 +13,7 @@ Profile : MoveTypes np -> Type
 Profile = ByPlayerH
 
 -- | Build a profile from a vector of moves.
-profile : {mvs : MoveTypes np} -> HVect (toVect mvs) -> Profile mvs
+profile : HVect {k} ts -> Profile {np = k} (fromVect ts)
 profile = MkHVectBy
 
 -- | A list of all pure strategy profiles.

@@ -159,6 +159,6 @@ pareto n = filter (optimal n) (allProfiles n)
 namespace Test
 
   test_nash :
-    so (nash (symmetric ['C','D'] [[2,0],[3,1]]) == [MkHVectBy ['D','D']]
-     && nash (symmetric ['C','D'] [[2,0],[1,1]]) == [MkHVectBy ['C','C'], MkHVectBy ['D','D']])
+    so (nash (symmetric ['C','D'] [[2,0],[3,1]]) == [profile ['D','D']]
+     && nash (symmetric ['C','D'] [[2,0],[1,1]]) == [profile ['C','C'], profile ['D','D']])
   test_nash = oh
