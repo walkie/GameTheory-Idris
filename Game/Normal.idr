@@ -5,6 +5,7 @@
 module Game.Normal
 
 import Data.Matrix
+import Game.Class
 import Game.Payoff
 import Game.Profile
 import Game.Simult
@@ -64,8 +65,8 @@ lookupPayoff {n1} {n2} (MkHVectBy [m1,m2]) n = do
 --
 
 -- | Convert a normal form game into a game tree.
-toGameTree : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
-toGameTree (MkNormal ms1 ms2 vs) =
+fromNormal : Normal n1 n2 m1 m2 -> GameTree Discrete () [m1,m2]
+fromNormal (MkNormal ms1 ms2 vs) =
   Node () (player 1) (DiscreteEdges (toList' (zipWith (\r,m1 => (m1,
     Node () (player 2) (DiscreteEdges (toList' (zipWith (\c,m2 => (m2,
       Leaf () (index r c vs)
@@ -77,6 +78,13 @@ toGameTree (MkNormal ms1 ms2 vs) =
 --   in the normal form game.
 toSimult : (Eq m1, Eq m2) => Payoff 2 -> Normal n1 n2 m1 m2 -> Simult [m1,m2]
 toSimult def n = MkSimult (\p => fromMaybe def (lookupPayoff p n))
+
+instance Game (Normal n1 n2 m1 m2) where
+  numPlayers _ = 2
+  edgeType   _ = Discrete
+  stateType  _ = ()
+  moveTypes  _ = [m1,m2]
+  toGameTree   = fromNormal
 
 
 --
