@@ -7,8 +7,17 @@ import Game.Util
 
 
 --
--- * Game trees
+-- * Representation
 --
+
+-- | The type of state stored at each node of the game tree.
+StateType : Type
+StateType = Type
+
+-- | A 'ByPlayer' vector of types representing the moves that are available
+--   to each player.
+MoveTypes : Nat -> Type
+MoveTypes np = ByPlayer np Type
 
 -- | The form of edges in the game tree, either 'Discrete' or 'Continuous'.
 EdgeType : Type
@@ -27,15 +36,6 @@ instance Eq t => Eq (Discrete mv t) where
 data Continuous : EdgeType where
   ContinuousEdges : (mv -> t) -> Continuous mv t
 
--- | The type of state stored at each node of the game tree.
-StateType : Type
-StateType = Type
-
--- | A 'ByPlayer' vector of types representing the moves that are available
---   to each player.
-MoveTypes : Nat -> Type
-MoveTypes np = ByPlayer np Type
-
 using (mvs : MoveTypes np)
 
   -- | A game tree consists of two kinds of nodes: Internal nodes present a
@@ -44,6 +44,11 @@ using (mvs : MoveTypes np)
   data GameTree : EdgeType -> StateType -> MoveTypes np -> Type where
     Node : s -> (i : PlayerID np) -> e (for i mvs) (GameTree e s mvs) -> GameTree e s mvs
     Leaf : s -> Payoff np -> GameTree e s mvs
+
+
+--
+-- * Destructors
+--
 
   -- | Returns 'True' if this is an internal node.
   isNode : GameTree e s mvs -> Bool
@@ -84,18 +89,14 @@ using (mvs : MoveTypes np)
   outcome' (Node _ _ _) = Nothing
   outcome' (Leaf _ o)   = Just o
   
-  -- | Get the outbound moves from a list of discrete edges.
-  moves : Discrete mv t -> List mv
-  moves (DiscreteEdges es) = map fst es
-
-  -- | Get the outbound moves from the current internal node.
+  -- | Get the outbound moves from the current discrete internal node.
   movesFrom : (g : GameTree Discrete s mvs)
            -> {default refl p : isNode g = True}
            -> List (for (whoseTurn g {p}) mvs)
-  movesFrom (Node _ _ e) = moves e
-  movesFrom (Leaf _ _)   impossible
+  movesFrom (Node _ _ (DiscreteEdges es)) = map fst es
+  movesFrom (Leaf _ _)                    impossible
 
-  -- | Get the children from the current game node.
+  -- | Get the children from the current discrete game node.
   children : GameTree Discrete s mvs -> List (GameTree Discrete s mvs)
   children (Node _ _ (DiscreteEdges es)) = map snd es
   children _ = []
@@ -133,6 +134,10 @@ using (mvs : MoveTypes np)
   execMoveC (Leaf _ _)                     impossible
 
 
+--
+-- * Search
+--
+
   -- | Get the nodes of the game tree in BFS order.
   %assert_total
   bfs : GameTree Discrete s mvs -> List (GameTree Discrete s mvs)
@@ -152,7 +157,7 @@ using (mvs : MoveTypes np)
 --
 -- * Static unit tests
 --
-  
+
 namespace Test
 
   TestGame : Type
