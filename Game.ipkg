@@ -9,10 +9,12 @@ modules =
   Game.ByGame,
   Game.ByPlayer,
   Game.ByTurn,
+  Game.Class
   Game.Normal,
   Game.Payoff,
   Game.Profile,
   Game.Simult,
   Game.StateBased,
   Game.Tree,
+  Game.TreeTest,
   Game.Util
