@@ -2,6 +2,8 @@ module Game.Class
 
 import Game.Tree
 
+%default total
+
 
 -- | Any game should be convertible to a game tree.
 class Game g where

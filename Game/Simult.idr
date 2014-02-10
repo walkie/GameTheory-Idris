@@ -2,6 +2,7 @@
 --   of moves. For discrete domains, see 'Game.Normal'.
 module Game.Simult
 
+import Game.Class
 import Game.Payoff
 import Game.Profile
 import Game.Tree
@@ -17,9 +18,40 @@ data Simult : MoveTypes np -> Type where
 payoffFun : {mvs : MoveTypes np} -> Simult mvs -> Profile mvs -> Payoff np
 payoffFun (MkSimult f) = f
 
--- | Captures games that can be converted into a simultaneous move game.
-class IsSimult (g : MoveTypes np -> Type) where
-  toSimult : g mvs -> Simult mvs
+-- | Convert a simultaneous move game into a game tree.
+fromSimult : {mvs : MoveTypes np} -> Simult mvs -> GameTree Continuous () mvs
+fromSimult (MkSimult f) = node last [] f
+  where 
+    %assert_total
+    node : {np  : Nat} -> {mvs : MoveTypes np}
+        -> {lev : Nat} -> {ts  : Vect lev Type}
+        -> (i   : Fin (S np))
+        -> HVect ts    -- ts = drop i (toVect mvs)
+        -> (Profile mvs -> Payoff np)
+        -> GameTree Continuous () mvs
+    node fZ     ms pay = Leaf () (pay (profile (believe_me ms)))
+    node (fS k) ms pay = Node () (MkPlayerID k)
+                         (ContinuousEdges (\m => node (weaken k) (m :: ms) pay))
 
-instance IsSimult (Simult {np}) where
-  toSimult = id
+instance Game (Simult {np} mvs) where
+  numPlayers _ = np
+  edgeType   _ = Continuous
+  stateType  _ = ()
+  moveTypes  _ = mvs
+  toGameTree   = fromSimult
+  
+
+--
+-- * Static unit tests
+--
+
+namespace Test
+
+  t_sum : GameTree Continuous () [Float,Float]
+  t_sum = fromSimult (MkSimult (\(MkHVectBy [a,b]) => payoff [a+b,a+b]))
+
+  {- Totality checker prevents this test from passing.
+  test_fromSimult :
+    so (outcome (execMoveC (execMoveC t_sum 3) 4) == payoff [7,7])
+  test_fromSimult = oh
+  -}
