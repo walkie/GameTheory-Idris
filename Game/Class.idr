@@ -20,3 +20,12 @@ class Game g where
 
   -- | Convert the game into a game tree.
   toGameTree : (x : g) -> GameTree (edgeType x) (stateType x) (moveTypes x)
+  
+  
+-- Trivial instance for game trees.
+instance Game (GameTree {np} e s mvs) where
+  numPlayers _ = np
+  edgeType   _ = e
+  stateType  _ = s
+  moveTypes  _ = mvs
+  toGameTree   = id
