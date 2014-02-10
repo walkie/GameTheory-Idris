@@ -149,8 +149,6 @@ namespace Test
   t_h : TestGame
   t_h = Node 'h' (player 2) (DiscreteEdges [(3,t_g),(4,t_e)])
 
-  -- TODO for some reason, using this function in types causes really slow
-  --      type checking...
   gameStates : List TestGame -> String
   gameStates = pack . map gameState
 
@@ -158,7 +156,7 @@ namespace Test
   sameStates = (==) `on` map gameState
 
   test_gameState :
-    so (pack (map gameState [t_a,t_b,t_c,t_d,t_e,t_f,t_g,t_h]) == "abcdefgh")
+    so (gameStates [t_a,t_b,t_c,t_d,t_e,t_f,t_g,t_h] == "abcdefgh")
   test_gameState = oh
 
   test_whoseTurn :
@@ -192,6 +190,8 @@ namespace Test
   test_children = oh
   -}
   
+  -- TODO for some reason, using gameStates in the following functions causes
+  --      really slow type checking
   test_bfs :
     so (pack (map gameState (bfs t_h)) == "hgeefababcd")
   test_bfs = oh
