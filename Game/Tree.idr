@@ -17,9 +17,9 @@ EdgeType = Type -> Type -> Type
 -- | Discrete tree edges, captured by an association list of moves and the
 --   subsequent game tree they produce.
 data Discrete : EdgeType where
-  DiscreteEdges : List (mv,t) -> Discrete mv t
+  DiscreteEdges : Eq mv => List (mv,t) -> Discrete mv t
 
-instance (Eq mv, Eq t) => Eq (Discrete mv t) where
+instance Eq t => Eq (Discrete mv t) where
   (DiscreteEdges es) == (DiscreteEdges fs) = es == fs
 
 -- | Continuous tree edges, captured by a function from moves to subsequent
@@ -99,6 +99,39 @@ using (mvs : MoveTypes np)
   children : GameTree Discrete s mvs -> List (GameTree Discrete s mvs)
   children (Node _ _ (DiscreteEdges es)) = map snd es
   children _ = []
+
+
+--
+-- * Game execution
+--
+  
+  -- | Perform a move from the current discrete internal node,
+  --   returns `Nothing` if the move is invalid.
+  execMoveD' : (g : GameTree Discrete s mvs)
+            -> {default refl p : isNode g = True}
+            -> (m : for (whoseTurn g {p}) mvs)
+            -> Maybe (GameTree Discrete s mvs)
+  execMoveD' (Node _ _ (DiscreteEdges es)) m = lookup m es
+  execMoveD' (Leaf _ _)                    _ impossible
+  
+  -- | Perform a move from the current discrete internal node.
+  execMoveD : (g : GameTree Discrete s mvs)
+           -> {default refl p1 : isNode g = True}
+           -> (m : for (whoseTurn g {p = p1}) mvs)
+           -> {default ItIsJust p2 : IsJust (execMoveD' g {p = p1} m)}
+           -> GameTree Discrete s mvs
+  execMoveD g {p1} m {p2} with (execMoveD' g {p = p1} m)
+    execMoveD g {p1} m {p2 = ItIsJust} | Just t  = t
+  execMoveD (Leaf _ _) _ impossible
+  
+  -- | Perform a move from the current continuous internal node.
+  execMoveC : (g : GameTree Continuous s mvs)
+         -> {default refl p : isNode g = True}
+         -> for (whoseTurn g {p}) mvs
+         -> GameTree Continuous s mvs
+  execMoveC (Node _ _ (ContinuousEdges f)) = f
+  execMoveC (Leaf _ _)                     impossible
+
 
   -- | Get the nodes of the game tree in BFS order.
   %assert_total
