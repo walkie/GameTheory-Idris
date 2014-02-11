@@ -2,14 +2,15 @@ package Game
 
 modules =
   Data.HVectBy,
-  Data.HVectList,
-  Data.HVectListBy,
+  Data.HVectByOf,
+  Data.HVectOf,
   Data.Matrix,
   Data.VectBy,
   Game.ByGame,
   Game.ByPlayer,
   Game.ByTurn,
-  Game.Class
+  Game.Class,
+  Game.History,
   Game.Normal,
   Game.Payoff,
   Game.Profile,
