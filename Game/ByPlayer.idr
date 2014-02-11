@@ -2,7 +2,7 @@
 module Game.ByPlayer
 
 import Data.HVectBy
-import Data.HVectListBy
+import Data.HVectByOf
 import Data.VectBy
 
 %default total
@@ -46,21 +46,21 @@ instance Cast (PlayerID np) (Fin np) where
 --
 
 -- | A vector where each element corresponds to a player.
---   A `ByPlayer` vector of length n is indexed from 1 up to n.
+--   A `ByPlayer` vector of length `np` is indexed from 1 up to `np`.
 ByPlayer : Nat -> Type -> Type
 ByPlayer = VectBy PlayerID
 
 -- | An h-vector where each element corresponds to a player.
---   Indexed from 1 to n.
+--   Indexed from 1 to `np`.
 --   TODO Better name?
-ByPlayerH : ByPlayer n Type -> Type
+ByPlayerH : ByPlayer np Type -> Type
 ByPlayerH = HVectBy PlayerID . toVect
 
 -- | An h-vector of lists where each list corresponds to a player.
---   Indexed from 1 to n.
+--   Indexed from 1 to `np`.
 --   TODO Better name?
-ByPlayerHL : ByPlayer n Type -> Type
-ByPlayerHL = HVectListBy PlayerID . toVect
+ByPlayerOf : (Type -> Type) -> ByPlayer np Type -> Type
+ByPlayerOf m = HVectByOf PlayerID m . toVect
 
 
 --

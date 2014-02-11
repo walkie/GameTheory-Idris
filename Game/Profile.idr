@@ -1,7 +1,7 @@
 -- | A simple representation of pure strategy profiles.
 module Game.Profile
 
-import Data.HVectList
+import Data.HVectOf
 import Game.ByPlayer
 import Game.Tree
 
@@ -17,5 +17,5 @@ profile : HVect {k} ts -> Profile {np = k} (fromVect ts)
 profile = MkHVectBy
 
 -- | A list of all pure strategy profiles.
-allProfiles : {mvs : MoveTypes np} -> ByPlayerHL mvs -> List (Profile mvs)
-allProfiles = map profile . cartesianProduct . toHVectList
+allProfiles : {mvs : MoveTypes np} -> ByPlayerOf List mvs -> List (Profile mvs)
+allProfiles = map profile . cartesianProduct . toHVectOf
