@@ -1,44 +1,44 @@
-module Data.HVectListBy
+module Data.HVectByOf
 
 import Data.HVect
-import Data.HVectList
+import Data.HVectOf
 
 %default total
 
 
 --
--- * X-indexed heterogeneous vectors of lists
+-- * X-indexed heterogeneous vectors of a shared collection type.
 --
 
-using (X : Nat -> Type, n : Nat, ts : Vect n Type)
+using (X : Nat -> Type, k : Nat, ts : Vect k Type, m : Type -> Type)
  
   -- | A heterogeneous vector of lists indexed by some type X.
-  data HVectListBy : (Nat -> Type) -> Vect n Type -> Type where
-    MkHVectListBy : HVectList ts -> HVectListBy X ts
+  data HVectByOf : (Nat -> Type) -> (Type -> Type) -> Vect k Type -> Type where
+    MkHVectByOf : HVectOf m ts -> HVectByOf X m ts
 
-  -- | Convert a plain 'HVectList' into an X-indexed 'HVectListBy'.
-  fromHVectList : HVectList ts -> HVectListBy X ts
-  fromHVectList = MkHVectListBy
+  -- | Convert a plain `HVectOf` into an X-indexed `HVectByOf`.
+  fromHVectOf : HVectOf m ts -> HVectByOf X m ts
+  fromHVectOf = MkHVectByOf
 
-  -- | Convert an X-indexed 'HVectListBy' into a plain 'HVectList'.
-  toHVectList : HVectListBy X ts -> HVectList ts
-  toHVectList (MkHVectListBy v) = v
+  -- | Convert an X-indexed `HVectByOf` into a plain `HVectOf`.
+  toHVectOf : HVectByOf X m ts -> HVectOf m ts
+  toHVectOf (MkHVectByOf v) = v
 
-  -- | Index into an 'HVectListBy' by casting X to a finite nat.
-  for : Cast (X n) (Fin n) => 
-        (x : X n) -> HVectListBy X ts -> List (index (cast x) ts)
-  for x (MkHVectListBy v) = index (cast x) v
+  -- | Index into an `HVectByOf` by casting X to a finite nat.
+  for : Cast (X k) (Fin k) => 
+        (x : X k) -> HVectByOf X m ts -> m (index (cast x) ts)
+  for x (MkHVectByOf v) = index (cast x) v
   
-  -- | Replace in an 'HVectListBy'.
-  replaceFor : Cast (X n) (Fin n) =>
-               (x : X n) -> List t -> HVectListBy X ts
-            -> HVectListBy X (replaceAt (cast x) t ts)
-  replaceFor x l (MkHVectListBy v) = MkHVectListBy (replaceAt (cast x) l v)
+  -- | Replace in an `HVectByOf`.
+  replaceFor : Cast (X k) (Fin k) =>
+               (x : X k) -> m t -> HVectByOf X m ts
+            -> HVectByOf X m (replaceAt (cast x) t ts)
+  replaceFor x l (MkHVectByOf v) = MkHVectByOf (replaceAt (cast x) l v)
  
 
-  instance Eq (HVectListBy X Nil) where
+  instance Eq (HVectByOf X m Nil) where
     _ == _ = True
   
-  instance (Eq t, Eq (HVectListBy X ts)) => Eq (HVectListBy X (t :: ts)) where
-    (MkHVectListBy (x :: xs)) == (MkHVectListBy (y :: ys)) =
-        x == y && MkHVectListBy xs == MkHVectListBy ys
+  instance (Eq (m t), Eq (HVectByOf X m ts)) => Eq (HVectByOf X m (t :: ts)) where
+    (MkHVectByOf (x :: xs)) == (MkHVectByOf (y :: ys)) =
+        x == y && MkHVectByOf xs == MkHVectByOf ys
