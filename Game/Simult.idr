@@ -12,26 +12,26 @@ import Game.Tree
 
 -- | A general simultaneous move game. Maps a strategy profile to a payoff.
 data Simult : MoveTypes np -> Type where
-  MkSimult : {mvs : MoveTypes np} -> (Profile mvs -> Payoff np) -> Simult mvs
+  MkSimult : {mvs : MoveTypes np} -> (Profile mvs -> Maybe (Payoff np)) -> Simult mvs
 
 -- | Get the payoff function for a simultaneous game.
-payoffFun : {mvs : MoveTypes np} -> Simult mvs -> Profile mvs -> Payoff np
+payoffFun : {mvs : MoveTypes np} -> Simult mvs -> Profile mvs -> Maybe (Payoff np)
 payoffFun (MkSimult f) = f
 
 -- | Convert a simultaneous move game into a game tree.
 fromSimult : {mvs : MoveTypes np} -> Simult mvs -> GameTree Continuous () mvs
-fromSimult (MkSimult f) = node last [] f
+fromSimult (MkSimult f) = fromMaybe (Leaf () tie) (node last [] f)
   where 
     %assert_total
     node : {np  : Nat} -> {mvs : MoveTypes np}
         -> {lev : Nat} -> {ts  : Vect lev Type}
         -> (i   : Fin (S np))
         -> HVect ts    -- ts = drop i (toVect mvs)
-        -> (Profile mvs -> Payoff np)
-        -> GameTree Continuous () mvs
-    node fZ     ms pay = Leaf () (pay (profile (believe_me ms)))
-    node (fS k) ms pay = Node () (MkPlayerID k)
-                         (ContinuousEdges (\m => node (weaken k) (m :: ms) pay))
+        -> (Profile mvs -> Maybe (Payoff np))
+        -> Maybe (GameTree Continuous () mvs)
+    node fZ     ms pay = map (Leaf ()) (pay (profile (believe_me ms)))
+    node (fS k) ms pay = Just (Node () (MkPlayerID k)
+                         (ContinuousEdges (\m => node (weaken k) (m :: ms) pay)))
 
 instance Game (Simult {np} mvs) where
   numPlayers _ = np
@@ -48,7 +48,7 @@ instance Game (Simult {np} mvs) where
 namespace Test
 
   t_sum : GameTree Continuous () [Float,Float]
-  t_sum = fromSimult (MkSimult (\(MkHVectBy [a,b]) => payoff [a+b,a+b]))
+  t_sum = fromSimult (MkSimult (\(MkHVectBy [a,b]) => Just (payoff [a+b,a+b])))
 
   {- Totality checker prevents this test from passing.
   test_fromSimult :

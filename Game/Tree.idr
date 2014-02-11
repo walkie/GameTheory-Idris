@@ -33,7 +33,7 @@ instance Eq t => Eq (Discrete mv t) where
 -- | Continuous tree edges, captured by a function from moves to subsequent
 --   game trees.
 data Continuous : EdgeType where
-  ContinuousEdges : (mv -> t) -> Continuous mv t
+  ContinuousEdges : (mv -> Maybe t) -> Continuous mv t
 
 using (mvs : MoveTypes np)
 
@@ -123,14 +123,25 @@ using (mvs : MoveTypes np)
   execMoveD g {p1} m {p2} with (execMoveD' g {p = p1} m)
     execMoveD g {p1} m {p2 = ItIsJust} | Just t  = t
   execMoveD (Leaf _ _) _ impossible
+
+  -- | Perform a move from the current continuous internal node,
+  --   returns `Nothing` if the move is invalid.
+  execMoveC' : (g : GameTree Continuous s mvs)
+            -> {default refl p : isNode g = True}
+            -> (m : for (whoseTurn g {p}) mvs)
+            -> Maybe (GameTree Continuous s mvs)
+  execMoveC' (Node _ _ (ContinuousEdges f)) m = f m
+  execMoveC' (Leaf _ _)                     _ impossible
   
   -- | Perform a move from the current continuous internal node.
   execMoveC : (g : GameTree Continuous s mvs)
-         -> {default refl p : isNode g = True}
-         -> for (whoseTurn g {p}) mvs
-         -> GameTree Continuous s mvs
-  execMoveC (Node _ _ (ContinuousEdges f)) = f
-  execMoveC (Leaf _ _)                     impossible
+           -> {default refl p1 : isNode g = True}
+           -> (m : for (whoseTurn g {p = p1}) mvs)
+           -> {default ItIsJust p2 : IsJust (execMoveC' g {p = p1} m)}
+           -> GameTree Continuous s mvs
+  execMoveC g {p1} m {p2} with (execMoveC' g {p = p1} m)
+    execMoveC g {p1} m {p2 = ItIsJust} | Just t  = t
+  execMoveC (Leaf _ _) _ impossible
 
 
 --

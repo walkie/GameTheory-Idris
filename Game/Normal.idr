@@ -73,11 +73,9 @@ fromNormal (MkNormal ms1 ms2 vs) =
     )) range ms2)))
   )) range ms1)))
 
--- | Convert a normal form game into a simultaneous move game. Yields the
---   provided default payoff for any strategy profile that is not included
---   in the normal form game.
-toSimult : (Eq m1, Eq m2) => Payoff 2 -> Normal n1 n2 m1 m2 -> Simult [m1,m2]
-toSimult def n = MkSimult (\p => fromMaybe def (lookupPayoff p n))
+-- | Convert a normal form game into a simultaneous move game.
+toSimult : (Eq m1, Eq m2) => Normal n1 n2 m1 m2 -> Simult [m1,m2]
+toSimult n = MkSimult (\p => lookupPayoff p n)
 
 instance (Eq m1, Eq m2) => Game (Normal n1 n2 m1 m2) where
   numPlayers _ = 2
