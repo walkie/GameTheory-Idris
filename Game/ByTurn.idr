@@ -39,9 +39,13 @@ instance Cast (TurnID n) (Fin n) where
 --
 
 -- | A vector where each element corresponds to a turn in a game instance.
---   A `ByTurn` list of length n is indexed from n down to 1.
+--   A `ByTurn` vector of length n is indexed from n down to 1.
 ByTurn : Nat -> Type -> Type
 ByTurn = VectBy TurnID
+
+-- | Add an element corresponding to a new turn.
+addTurn : a -> ByTurn n a -> ByTurn (S n) a
+addTurn a (MkVectBy as) = MkVectBy (a :: as)
 
 
 --

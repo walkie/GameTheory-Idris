@@ -45,6 +45,9 @@ instance Cast (GameID n) (Fin n) where
 ByGame : Nat -> Type -> Type
 ByGame = VectBy GameID
 
+-- | Add an element corresponding to a new game instance.
+addGame : a -> ByGame n a -> ByGame (S n) a
+addGame a (MkVectBy as) = MkVectBy (a :: as)
 
 --
 -- * Static unit tests
