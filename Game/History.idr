@@ -13,6 +13,6 @@ import Game.Tree
 --
 
 -- | A transcript of all move events in a single game execution.
-data Transcript : {np : Nat} -> (mvs : MoveTypes np) -> Type where
+data Transcript : (mvs : MoveTypes np) -> Type where
   Event : (i : PlayerID np) -> for i mvs -> Transcript mvs -> Transcript mvs
   End   : Transcript {np} mvs
