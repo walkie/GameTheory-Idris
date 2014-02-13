@@ -69,16 +69,16 @@ using (n : Nat, ts : Vect k Type, c : Type -> Type)
   updateAt fZ     f (x :: xs) = f x :: xs
   updateAt (fS j) f (x :: xs) =   x :: updateAt j f xs
 
+  -- | Concatenate two heterogeneous vectors.
+  (++) : HVectOf c ts -> {us : Vect l Type} -> HVectOf c us -> HVectOf c (ts ++ us)
+  (++) Nil       ys = ys
+  (++) (x :: xs) ys = x :: (xs ++ ys)
+
 
 --
 -- * Heterogeneous vectors of lists
 --
   
-  -- | Concatenate two heterogeneous vectors of lists.
-  (++) : HVectOf List ts -> {us : Vect l Type} -> HVectOf List us -> HVectOf List (ts ++ us)
-  (++) Nil       ys = ys
-  (++) (x :: xs) ys = x :: (xs ++ ys)
-
   -- | Computes the n-ary cartesian product of the lists within a heterogeneous
   --   vector of lists.
   --   For example:
