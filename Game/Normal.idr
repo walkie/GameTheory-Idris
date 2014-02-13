@@ -23,6 +23,10 @@ import Game.Util
 data Normal : Nat -> Nat -> Type -> Type -> Type where
   MkNormal : Vect n1 m1 -> Vect n2 m2 -> Matrix n1 n2 (Payoff 2) -> Normal n1 n2 m1 m2
 
+-- | Get the moves for both players.
+moves : Normal n1 n2 m1 m2 -> Moves (fromVect [m1,m2])
+moves (MkNormal ms1 ms2 _) = fromHVectT [toList ms1, toList ms2]
+
 -- | Get the moves for player 1.
 movesP1 : Normal n1 n2 m1 m2 -> Vect n1 m1
 movesP1 (MkNormal ms _ _) = ms
