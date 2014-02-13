@@ -36,7 +36,11 @@ using (n : Nat, ts : Vect k Type, c : Type -> Type)
   instance (Eq (c t), Eq (HVectT c ts)) => Eq (HVectT c (t::ts)) where
     (x :: xs) == (y :: ys) = x == y && xs == ys
 
-  -- TODO Add Show machinery?
+  instance Show (HVectT c Nil) where
+    show Nil = "[]"
+
+  instance (Show (c t), Show (HVectT c ts)) => Show (HVectT c (t::ts)) where
+    show (x :: xs) = show x ++ " :: " ++ show xs
 
 
 --
