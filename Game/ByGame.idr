@@ -49,6 +49,11 @@ ByGame = VectBy GameID
 addGame : a -> ByGame n a -> ByGame (S n) a
 addGame a (MkVectBy as) = MkVectBy (a :: as)
 
+-- | Get the element corresponding to the most recently completed game.
+lastGame : ByGame (S n) a -> a
+lastGame (MkVectBy {n = (S _)} (a::_)) = a
+lastGame (MkVectBy {n = Z}     Nil)    impossible
+
 
 --
 -- * Static unit tests
