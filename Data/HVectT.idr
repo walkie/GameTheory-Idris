@@ -6,6 +6,7 @@
 --   This module is adapted from Idris's standard Data.HVect.
 module Data.HVectT
 
+import Control.Monad.Identity
 import Data.HVect
 
 %default total
@@ -15,12 +16,16 @@ import Data.HVect
 -- * Representation
 --
 
-using (n : Nat, ts : Vect k Type, c : Type -> Type)
+using (ts : Vect k Type, c : Type -> Type)
   
   -- | A heterogeneous vector of some collection type `c`.
   data HVectT : (Type -> Type) -> Vect k Type -> Type where
     Nil  : HVectT c Nil
     (::) : c t -> HVectT c ts -> HVectT c (t :: ts)
+
+  -- | An alternative implementation of plain heterogeneous vectors.
+  HVect' : Vect k Type -> Type
+  HVect' = HVectT Identity
 
   -- | Get the first collection in the vector.
   head : HVectT c (t :: ts) -> c t
@@ -32,13 +37,11 @@ using (n : Nat, ts : Vect k Type, c : Type -> Type)
 
   instance Eq (HVectT c Nil) where
     _ == _ = True
-
   instance (Eq (c t), Eq (HVectT c ts)) => Eq (HVectT c (t::ts)) where
     (x :: xs) == (y :: ys) = x == y && xs == ys
 
   instance Show (HVectT c Nil) where
     show Nil = "[]"
-
   instance (Show (c t), Show (HVectT c ts)) => Show (HVectT c (t::ts)) where
     show (x :: xs) = show x ++ " :: " ++ show xs
 
