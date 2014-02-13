@@ -18,10 +18,10 @@ import Game.ByPlayer
 --   While the type of payoffs could be generalized, this representation
 --   supports both cardinal and ordinal payoffs while being easy to work with.
 Payoff : Nat -> Type
-Payoff n = ByPlayer n Float
+Payoff np = VectBy PlayerID np Float
 
 -- | Create a payoff from a vector.
-payoff : Vect n Float -> Payoff n
+payoff : Vect np Float -> Payoff np
 payoff = fromVect
 
 
@@ -30,21 +30,21 @@ payoff = fromVect
 --
 
 -- | Payoff where all players score payoff a, except player p, who scores b.
-allBut : PlayerID n -> Float -> Float -> Payoff n
+allBut : PlayerID np -> Float -> Float -> Payoff np
 allBut p a b = replaceAt (cast p) b (replicate _ a)
 
--- | Zero-sum payoff where player p wins (scoring n-1) 
+-- | Zero-sum payoff where player p wins (scoring np-1) 
 --   and all other players lose (scoring -1).
-winner : PlayerID n -> Payoff n
-winner {n} p = allBut p (-1) (fromInteger (cast n) - 1)
+winner : PlayerID np -> Payoff np
+winner {np} p = allBut p (-1) (fromInteger (cast np) - 1)
 
--- | Zero-sum payoff where player p wins (scoring n-1) 
+-- | Zero-sum payoff where player p wins (scoring np-1) 
 --   and all other players lose (scoring -1).
-loser : PlayerID n -> Payoff n
-loser {n} p = allBut p 1 (1 - fromInteger (cast n))
+loser : PlayerID np -> Payoff np
+loser {np} p = allBut p 1 (1 - fromInteger (cast np))
 
 -- | Zero-sum payoff where all players tie. Each player scores 0.
-tie : Payoff n
+tie : Payoff np
 tie = replicate _ 0
 
 
@@ -65,11 +65,11 @@ showSeq (s :: List.Nil) = s
 showSeq (s :: ss) = s ++ "," ++ showSeq ss
 
 -- | String representation of a Payoff.
-showPayoff : Payoff n -> String
+showPayoff : Payoff np -> String
 showPayoff = showSeq . toList . map showFloat
 
 -- | Bracketed string representation of a Payoff.
-showPayoffAsList : Payoff n -> String
+showPayoffAsList : Payoff np -> String
 showPayoffAsList p = "[" ++ showPayoff p ++ "]"
 
 
