@@ -1,8 +1,6 @@
 -- | Vectors where each element corresponds to a particular player.
 module Game.ByPlayer
 
-import Data.HVectBy
-import Data.HVectByOf
 import Data.VectBy
 
 %default total
@@ -17,7 +15,7 @@ import Data.VectBy
 data PlayerID : Nat -> Type where
   MkPlayerID : Fin np -> PlayerID np
 
--- | Construct a `PlayerID` from an integer from 1 to n, where n is the
+-- | Construct a `PlayerID` from an integer from 1 to np, where np is the
 --   number of players in this execution.
 toPlayerID : Integer -> Maybe (PlayerID np)
 toPlayerID {np} i = map MkPlayerID (integerToFin (i-1) np)
@@ -28,7 +26,7 @@ player : (i : Integer) -> {default ItIsJust p : IsJust (toPlayerID {np} i)} -> P
 player {np} i {p} with (toPlayerID {np} i)
   player {np} i {p = ItIsJust} | Just x = x
 
--- | Get the next player in order.
+-- | Get the next player ID in order.
 nextPlayer : PlayerID (S np) -> PlayerID (S np)
 nextPlayer {np} (MkPlayerID i) = MkPlayerID i'
   where i' = fromMaybe fZ (natToFin (S (finToNat i)) (S np))
@@ -49,18 +47,6 @@ instance Cast (PlayerID np) (Fin np) where
 --   A `ByPlayer` vector of length `np` is indexed from 1 up to `np`.
 ByPlayer : Nat -> Type -> Type
 ByPlayer = VectBy PlayerID
-
--- | An h-vector where each element corresponds to a player.
---   Indexed from 1 to `np`.
---   TODO Better name?
-ByPlayerH : ByPlayer np Type -> Type
-ByPlayerH = HVectBy PlayerID . toVect
-
--- | An h-vector of lists where each list corresponds to a player.
---   Indexed from 1 to `np`.
---   TODO Better name?
-ByPlayerOf : (Type -> Type) -> ByPlayer np Type -> Type
-ByPlayerOf m = HVectByOf PlayerID m . toVect
 
 
 --

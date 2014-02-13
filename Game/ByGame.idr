@@ -49,6 +49,7 @@ ByGame = VectBy GameID
 addGame : a -> ByGame n a -> ByGame (S n) a
 addGame a (MkVectBy as) = MkVectBy (a :: as)
 
+
 --
 -- * Static unit tests
 --

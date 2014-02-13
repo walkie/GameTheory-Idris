@@ -3,8 +3,8 @@
 module Game.Simult
 
 import Game.Class
+import Game.Move
 import Game.Payoff
-import Game.Profile
 import Game.Tree
 
 %default total

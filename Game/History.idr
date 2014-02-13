@@ -22,6 +22,7 @@ data Transcript : (mvs : MoveTypes np) -> Type where
 MoveSummary : Vect np Nat -> MoveTypes np -> Type
 MoveSummary turns = HVectBy PlayerID . zipWith ByTurn turns . toVect
 
+  {-
 using (np : Nat, mvs : MoveTypes np)
 
   -- | An empty move summary.
@@ -33,7 +34,6 @@ using (np : Nat, mvs : MoveTypes np)
       initialize f (t :: ts) = f t :: initialize f ts
       initialize _ Nil       = Nil
   
-  {-
   -- | Produce a move summary from a transcript.
   moveSummary : Transcript mvs -> MoveSummary mvs
   moveSummary = process emptyMoveSummary

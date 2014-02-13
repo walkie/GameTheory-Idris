@@ -1,5 +1,6 @@
 module Game.Tree
 
+import Game.Move
 import Game.Payoff
 
 %default total
@@ -12,11 +13,6 @@ import Game.Payoff
 -- | The type of state stored at each node of the game tree.
 StateType : Type
 StateType = Type
-
--- | A 'ByPlayer' vector of types representing the moves that are available
---   to each player.
-MoveTypes : Nat -> Type
-MoveTypes np = ByPlayer np Type
 
 -- | The form of edges in the game tree, either 'Discrete' or 'Continuous'.
 EdgeType : Type

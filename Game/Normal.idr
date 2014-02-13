@@ -6,8 +6,8 @@ module Game.Normal
 
 import Data.Matrix
 import Game.Class
+import Game.Move
 import Game.Payoff
-import Game.Profile
 import Game.Simult
 import Game.Tree
 import Game.Util
@@ -119,7 +119,7 @@ square ms vs = MkNormal ms ms (zerosum vs)
 -- | A list of all pure strategy profiles.
 allProfiles : Normal n1 n2 m1 m2 -> List (Profile [m1,m2])
 allProfiles {m1} {m2} (MkNormal ms1 ms2 _) =
-  allProfiles {mvs = fromVect [m1,m2]} (fromHVectOf [toList ms1, toList ms2])
+  allProfiles {mvs = fromVect [m1,m2]} (fromHVectT [toList ms1, toList ms2])
 
 
 -- ** Nash equilbria
