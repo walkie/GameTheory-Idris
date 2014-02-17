@@ -1,5 +1,7 @@
 package Game
 
+opts = "-p effects"
+
 modules =
   Data.HVectBy,
   Data.HVectT,
