@@ -85,6 +85,11 @@ using (ts : Vect k Type, c : Type -> Type)
 -- * Other operations
 --
 
+  -- | Initialize a heterogeneous vector of collections.
+  initialize : ((t : Type) -> c t) -> (ts : Vect k Type) -> HVectT c ts
+  initialize f (t :: ts) = f t :: initialize f ts
+  initialize _ Nil       = Nil
+
   -- | Concatenate two heterogeneous vectors of collections.
   (++) : HVectT c ts -> {us : Vect l Type} -> HVectT c us -> HVectT c (ts ++ us)
   (++) Nil       ys = ys
