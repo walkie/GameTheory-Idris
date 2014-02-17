@@ -83,17 +83,23 @@ using (mvs : MoveTypes np)
 History : Nat -> MoveTypes np -> Type
 History n mvs = ByGame {n} (Iteration mvs)
 
--- | Get the transript for each game iteration.
-transcripts : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Transcript mvs)
-transcripts = map transcript
+using (mvs : MoveTypes np)
 
--- | Get the move summary for each game iteration.
-summaries : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Summary mvs)
-summaries = map summary
-
--- | Get the move summary for each game iteration.
-payoffs : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Payoff np)
-payoffs = map payoff
+  -- | Get the transript for each game iteration.
+  transcripts : History n mvs -> ByGame {n} (Transcript mvs)
+  transcripts = map transcript
+  
+  -- | Get the move summary for each game iteration.
+  summaries : History n mvs -> ByGame {n} (Summary mvs)
+  summaries = map summary
+  
+  -- | Get the move summary for each game iteration.
+  payoffs : History n mvs -> ByGame {n} (Payoff np)
+  payoffs = map payoff
+  
+  -- | Compute the score from a history.
+  score : History n mvs -> Payoff np
+  score = foldr (<+>) tie . payoffs
 
 
 --
