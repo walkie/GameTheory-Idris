@@ -49,6 +49,22 @@ tie = replicate _ 0
 
 
 --
+-- * Group instances
+--
+
+instance Semigroup (Payoff np) where
+  (<+>) (MkVectBy v) (MkVectBy w) = MkVectBy (zipWith (+) v w)
+
+instance Monoid (Payoff np) where
+  neutral = tie
+
+instance Group (Payoff np) where
+  inverse (MkVectBy v) = MkVectBy (map (0-) v)
+
+instance AbelianGroup (Payoff np) where { }
+
+
+--
 -- * Pretty printing
 --
 
