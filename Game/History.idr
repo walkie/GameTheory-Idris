@@ -47,6 +47,56 @@ using (mvs : MoveTypes np)
 
 
 --
+-- * Completed iterations
+--
+
+-- | A record of a completed game iteration, consisting of a transcript,
+--   a move summary, and the resulting payoff.
+data Iteration : MoveTypes np -> Type where
+  MkIteration : {mvs : MoveTypes np}
+             -> (transcript : Transcript mvs)
+             -> (summary    : Summary mvs)
+             -> (payoff     : Payoff np)
+             -> Iteration mvs
+
+using (mvs : MoveTypes np)
+
+  -- | Get the transcript from an iteration record.
+  transcript : Iteration mvs -> Transcript mvs
+  transcript (MkIteration t _ _) = t
+  
+  -- | Get the move summary from an iteration record.
+  summary : Iteration mvs -> Summary mvs
+  summary (MkIteration _ s _) = s
+  
+  -- | Get the payoff from an iteration record.
+  payoff : Iteration mvs -> Payoff np
+  payoff (MkIteration _ _ p) = p
+
+
+--
+-- * Execution history
+--
+
+-- | The execution history of an iterated game: a transcript and summary
+--   of each completed iteration.
+History : Nat -> MoveTypes np -> Type
+History n mvs = ByGame {n} (Iteration mvs)
+
+-- | Get the transript for each game iteration.
+transcripts : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Transcript mvs)
+transcripts = map transcript
+
+-- | Get the move summary for each game iteration.
+summaries : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Summary mvs)
+summaries = map summary
+
+-- | Get the move summary for each game iteration.
+payoffs : {mvs : MoveTypes np} -> History n mvs -> ByGame {n} (Payoff np)
+payoffs = map payoff
+
+
+--
 -- Proofs
 --
   
