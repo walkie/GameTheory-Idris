@@ -19,6 +19,35 @@ data Transcript : (mvs : MoveTypes np) -> Type where
 
 
 --
+-- * State of the current iteration
+--
+
+-- | The state of execution of the current game iteration.
+-- 
+--   TODO I'd like to define a record here to auto-generate
+--        getters and setters, but this bug breaks it:
+--        https://github.com/idris-lang/Idris-dev/issues/262
+data Current : EdgeType -> StateType -> MoveTypes np -> Type where
+  MkCurrent : (location   : GameTree {np} e s mvs)
+           -> (transcript : Transcript mvs)
+           -> Current e s mvs
+
+using (mvs : MoveTypes np)
+
+  -- | The initial game execution state.
+  newIteration : GameTree e s mvs -> Current e s mvs
+  newIteration l = MkCurrent l End
+  
+  -- | Set the current location.
+  setLocation : GameTree e s mvs -> Current e s mvs -> Current e s mvs
+  setLocation l (MkCurrent _ t) = MkCurrent l t
+
+  -- | Add an event to the transcript.
+  addEvent : (i : PlayerID np) -> for i mvs -> Current e s mvs -> Current e s mvs
+  addEvent i m (MkCurrent l t) = MkCurrent l (Event i m t)
+
+
+--
 -- * Move summaries
 --
 
@@ -47,31 +76,31 @@ using (mvs : MoveTypes np)
 
 
 --
--- * Completed iterations
+-- * State of completed iterations
 --
 
 -- | A record of a completed game iteration, consisting of a transcript,
 --   a move summary, and the resulting payoff.
-data Iteration : MoveTypes np -> Type where
-  MkIteration : {mvs : MoveTypes np}
+data Complete : MoveTypes np -> Type where
+  MkComplete : {mvs : MoveTypes np}
              -> (transcript : Transcript mvs)
              -> (summary    : Summary mvs)
              -> (payoff     : Payoff np)
-             -> Iteration mvs
+             -> Complete mvs
 
 using (mvs : MoveTypes np)
 
   -- | Get the transcript from an iteration record.
-  transcript : Iteration mvs -> Transcript mvs
-  transcript (MkIteration t _ _) = t
+  transcript : Complete mvs -> Transcript mvs
+  transcript (MkComplete t _ _) = t
   
   -- | Get the move summary from an iteration record.
-  summary : Iteration mvs -> Summary mvs
-  summary (MkIteration _ s _) = s
+  summary : Complete mvs -> Summary mvs
+  summary (MkComplete _ s _) = s
   
   -- | Get the payoff from an iteration record.
-  payoff : Iteration mvs -> Payoff np
-  payoff (MkIteration _ _ p) = p
+  payoff : Complete mvs -> Payoff np
+  payoff (MkComplete _ _ p) = p
 
 
 --
@@ -81,7 +110,7 @@ using (mvs : MoveTypes np)
 -- | The execution history of an iterated game: a transcript and summary
 --   of each completed iteration.
 History : Nat -> MoveTypes np -> Type
-History n mvs = ByGame {n} (Iteration mvs)
+History n mvs = ByGame {n} (Complete mvs)
 
 using (mvs : MoveTypes np)
 
