@@ -66,17 +66,17 @@ using (ts : Vect k Type, c : Type -> Type)
 
   -- | Replace the collection at index `i`.
   replaceAt : (i : Fin k)
-           -> c t
+           -> c u
            -> HVectT c ts
-           -> HVectT c (replaceAt i t ts)
+           -> HVectT c (replaceAt i u ts)
   replaceAt fZ     y (x :: xs) = y :: xs
   replaceAt (fS j) y (x :: xs) = x :: replaceAt j y xs
 
   -- | Update the collection at index `i`.
   updateAt : (i : Fin k)
-          -> (c (index i ts) -> c t)
+          -> (c (index i ts) -> c u)
           -> HVectT c ts
-          -> HVectT c (replaceAt i t ts)
+          -> HVectT c (replaceAt i u ts)
   updateAt fZ     f (x :: xs) = f x :: xs
   updateAt (fS j) f (x :: xs) =   x :: updateAt j f xs
 

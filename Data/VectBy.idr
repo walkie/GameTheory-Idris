@@ -24,7 +24,7 @@ using (X : Nat -> Type)
 
   -- | Index into an X-indexed vector by casting X to a finite nat.
   for : Cast (X n) (Fin n) => X n -> VectBy X n a -> a
-  for x (MkVectBy v) = index (cast x) v
+  for x v = index (cast x) (toVect v)
 
   -- | Replace in an X-indexed vector.
   replaceFor : Cast (X n) (Fin n) => X n -> a -> VectBy X n a -> VectBy X n a
