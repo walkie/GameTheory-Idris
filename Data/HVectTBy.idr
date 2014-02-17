@@ -34,6 +34,14 @@ using (X : Nat -> Type, ts : Vect k Type, c : Type -> Type)
             -> HVectTBy X c (replaceAt (cast x) t ts)
   replaceFor x l (MkHVectTBy v) = MkHVectTBy (replaceAt (cast x) l v)
 
+  -- | Update in an `HVectTBy`.
+  updateFor : Cast (X k) (Fin k) =>
+              (x : X k)
+           -> (c (index (cast x) ts) -> c u)
+           -> HVectTBy X c ts
+           -> HVectTBy X c (replaceAt (cast x) u ts)
+  updateFor x f (MkHVectTBy v) = MkHVectTBy (updateAt (cast x) f v)
+
 
   instance Eq (HVectTBy X c Nil) where
     _ == _ = True
