@@ -1,4 +1,4 @@
-module Game.History
+module Game.ExecState
 
 import Game.ByGame
 import Game.ByTurn
