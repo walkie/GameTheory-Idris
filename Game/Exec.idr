@@ -8,7 +8,7 @@ import Game.Tree
 %default total
 
 
--- | The state of a game execution.
+-- | The state of a game iteration execution.
 -- 
 --   TODO I'd like to define a record here to auto-generate
 --        getters and setters, but this bug breaks it:

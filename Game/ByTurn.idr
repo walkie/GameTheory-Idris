@@ -1,4 +1,4 @@
--- | Lists where each element corresponds to a turn in a game instance.
+-- | Lists where each element corresponds to a turn in a game iteration.
 module Game.ByTurn
 
 import Data.VectBy
@@ -10,13 +10,13 @@ import Data.VectBy
 -- * Turn IDs
 --
 
--- | Identifies a turn within a game instance.
+-- | Identifies a turn within a game iteration.
 --   Construct using the `toTurnID` or `turn` functions.
 data TurnID : Type where
   MkTurnID : Nat -> TurnID
 
 -- | Construct a `TurnID` from an integer from n to 1, where n is the
---   number of turns taken so far in this game instance.
+--   number of turns taken so far in this game iteration.
 toTurnID : Integer -> Maybe TurnID
 toTurnID i = if i > 0 then Just (MkTurnID (fromInteger i)) else Nothing
 
@@ -36,7 +36,7 @@ instance Show TurnID where
 -- * ByTurn lists
 --
 
--- | A list where each element corresponds to a turn in a game instance.
+-- | A list where each element corresponds to a turn in a game iteration.
 --   A `ByTurn` list of length n is indexed from n down to 1.
 data ByTurn : Type -> Type where
   MkByTurn : (n : Nat) -> Vect n a -> ByTurn a

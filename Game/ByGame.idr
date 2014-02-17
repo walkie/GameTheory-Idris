@@ -1,4 +1,4 @@
--- | Vectors where each element corresponds to a game instance.
+-- | Vectors where each element corresponds to a game iteration.
 module Game.ByGame
 
 import Data.VectBy
@@ -10,7 +10,7 @@ import Data.VectBy
 -- * Game IDs
 --
 
--- | Identifies a game instance within an execution.
+-- | Identifies a game iteration within an execution.
 --   Construct using the `toGameID` or `game` functions.
 data GameID : Nat -> Type where
   MkGameID : Fin n -> GameID n
@@ -18,7 +18,7 @@ data GameID : Nat -> Type where
 -- | Construct a `GameID` from an int
 
 -- | Construct a `GameID` from an integer from n to 1, where n is the
---   number of game instances executed so far.
+--   number of game iterations executed so far.
 toGameID : Integer -> Maybe (GameID n)
 toGameID {n} i = map MkGameID (integerToFin (cast n - i) n)
 
@@ -40,12 +40,12 @@ instance Cast (GameID n) (Fin n) where
 -- * ByGame vectors
 --
 
--- | A vector where each element corresponds to a game instance.
+-- | A vector where each element corresponds to a game iteration.
 --   A `ByGame` vector of length n is indexed from n down to 1.
 ByGame : Nat -> Type -> Type
 ByGame = VectBy GameID
 
--- | Add an element corresponding to a new game instance.
+-- | Add an element corresponding to a new game iteration.
 addGame : a -> ByGame n a -> ByGame (S n) a
 addGame a (MkVectBy as) = MkVectBy (a :: as)
 

@@ -12,7 +12,7 @@ import Game.Tree
 -- * Transcript
 --
 
--- | A transcript of all move events in a single game execution.
+-- | A transcript of all move events in a single game iteration.
 data Transcript : (mvs : MoveTypes np) -> Type where
   Event : (i : PlayerID np) -> for i mvs -> Transcript mvs -> Transcript mvs
   End   : Transcript {np} mvs
@@ -22,7 +22,7 @@ data Transcript : (mvs : MoveTypes np) -> Type where
 -- * Move summaries
 --
 
--- | A summary of the moves played in a single game instance.
+-- | A summary of the moves played in a single game iteration.
 --   A ByPlayer h-vector of ByTurn vectors of moves.
 MoveSummary : MoveTypes np -> Type
 MoveSummary = HVectTBy PlayerID ByTurn . toVect
