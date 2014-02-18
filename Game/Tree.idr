@@ -100,44 +100,43 @@ using (mvs : MoveTypes np)
 --
 -- * Game execution
 --
-  
-  -- | Perform a move from the current discrete internal node,
-  --   returns `Nothing` if the move is invalid.
-  execMoveD' : (g : GameTree Discrete s mvs)
-            -> {default refl p : isNode g = True}
-            -> (m : for (whoseTurn g {p}) mvs)
-            -> Maybe (GameTree Discrete s mvs)
-  execMoveD' (Node _ _ (DiscreteEdges es)) m = lookup m es
-  execMoveD' (Leaf _ _)                    _ impossible
-  
-  -- | Perform a move from the current discrete internal node.
-  execMoveD : (g : GameTree Discrete s mvs)
-           -> {default refl p1 : isNode g = True}
-           -> (m : for (whoseTurn g {p = p1}) mvs)
-           -> {default ItIsJust p2 : IsJust (execMoveD' g {p = p1} m)}
-           -> GameTree Discrete s mvs
-  execMoveD g {p1} m {p2} with (execMoveD' g {p = p1} m)
-    execMoveD g {p1} m {p2 = ItIsJust} | Just t  = t
-  execMoveD (Leaf _ _) _ impossible
 
-  -- | Perform a move from the current continuous internal node,
-  --   returns `Nothing` if the move is invalid.
-  execMoveC' : (g : GameTree Continuous s mvs)
-            -> {default refl p : isNode g = True}
-            -> (m : for (whoseTurn g {p}) mvs)
-            -> Maybe (GameTree Continuous s mvs)
-  execMoveC' (Node _ _ (ContinuousEdges f)) m = f m
-  execMoveC' (Leaf _ _)                     _ impossible
+  class Edge (e : EdgeType) where
+    
+    -- | Given a set of edges, perform a move and return the resulting game tree.
+    --   Returns `Nothing` if the move is invalid.
+    followEdge' : e mv t -> mv -> Maybe t
+
+  instance Edge Discrete where
+    followEdge' (DiscreteEdges es) m = lookup m es
+  instance Edge Continuous where
+    followEdge' (ContinuousEdges f) m = f m
   
-  -- | Perform a move from the current continuous internal node.
-  execMoveC : (g : GameTree Continuous s mvs)
+  -- | Given a set of edges, perform a move and return the resulting game tree.
+  followEdge : Edge e => (x : e mv t) -> (m : mv)
+            -> {default ItIsJust p : IsJust (followEdge' x m)}
+            -> t
+  followEdge x m {p} with (followEdge' x m)
+    followEdge x m {p = ItIsJust} | Just t = t
+
+  -- | Perform a move from the current internal node.
+  --   Returns `Nothing` if the move is invalid.
+  execMove' : Edge e => (g : GameTree e s mvs)
+           -> {default refl p : isNode g = True}
+           -> (m : for (whoseTurn g {p}) mvs)
+           -> Maybe (GameTree e s mvs)
+  execMove' (Node _ _ es) m = followEdge' es m
+  execMove' (Leaf _ _)    _ impossible
+  
+  -- | Perform a move from the current internal node.
+  execMove : Edge e => (g : GameTree e s mvs)
            -> {default refl p1 : isNode g = True}
            -> (m : for (whoseTurn g {p = p1}) mvs)
-           -> {default ItIsJust p2 : IsJust (execMoveC' g {p = p1} m)}
-           -> GameTree Continuous s mvs
-  execMoveC g {p1} m {p2} with (execMoveC' g {p = p1} m)
-    execMoveC g {p1} m {p2 = ItIsJust} | Just t  = t
-  execMoveC (Leaf _ _) _ impossible
+           -> {default ItIsJust p2 : IsJust (execMove' g {p = p1} m)}
+           -> GameTree e s mvs
+  execMove g {p1} m {p2} with (execMove' g {p = p1} m)
+    execMove g {p1} m {p2 = ItIsJust} | Just t  = t
+  execMove (Leaf _ _) _ impossible
 
 
 --
