@@ -1,7 +1,7 @@
 module Game.History
 
 import Game.ByGame
-import Game.ExecState
+import Game.Current
 
 %default total
 
