@@ -1,4 +1,4 @@
-module Game.ExecState
+module Game.Current
 
 import Effects
 import Effect.State

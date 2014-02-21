@@ -1,6 +1,6 @@
 package Game
 
-opts = "-p effects"
+opts = "-p neweffects"
 
 modules =
   Data.HVectBy,
@@ -12,11 +12,13 @@ modules =
   Game.ByPlayer,
   Game.ByTurn,
   Game.Class,
+  Game.Current,
   Game.Exec,
   Game.History,
   Game.Move,
   Game.Normal,
   Game.Payoff,
+  Game.Player,
   Game.Simult,
   Game.StateBased,
   Game.Tree,
