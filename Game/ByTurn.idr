@@ -1,4 +1,4 @@
--- | Lists where each element corresponds to a turn in a game iteration.
+--   Lists where each element corresponds to a turn in a game iteration.
 module Game.ByTurn
 
 import Data.VectBy

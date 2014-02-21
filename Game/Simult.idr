@@ -1,4 +1,4 @@
--- | Simultaneous move games. This representation supports continuous domains
+--   Simultaneous move games. This representation supports continuous domains
 --   of moves. For discrete domains, see 'Game.Normal'.
 module Game.Simult
 

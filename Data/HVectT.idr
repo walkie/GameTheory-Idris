@@ -1,4 +1,4 @@
--- | Heterogeneous vectors where the type of each element is applied
+--   Heterogeneous vectors where the type of each element is applied
 --   to a shared type constructor `c`. For example, `HVectT List` is
 --   a vector of lists that is heterogeneous in the element type of
 --   each list.

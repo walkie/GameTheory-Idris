@@ -1,4 +1,4 @@
--- | Various representations of normal form games, smart contructors for
+--   Various representations of normal form games, smart contructors for
 --   creating them, and functions for analyzing them.
 --
 --   TODO Generalize to n-ary normal form games?

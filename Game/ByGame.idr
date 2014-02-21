@@ -1,4 +1,4 @@
--- | Vectors where each element corresponds to a game iteration.
+--   Vectors where each element corresponds to a game iteration.
 module Game.ByGame
 
 import Data.VectBy
@@ -14,8 +14,6 @@ import Data.VectBy
 --   Construct using the `toGameID` or `game` functions.
 data GameID : Nat -> Type where
   MkGameID : Fin n -> GameID n
-
--- | Construct a `GameID` from an int
 
 -- | Construct a `GameID` from an integer from n to 1, where n is the
 --   number of game iterations executed so far.

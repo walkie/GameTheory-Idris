@@ -1,4 +1,4 @@
--- | A simple representation of pure strategy profiles.
+--   A simple representation of pure strategy profiles.
 module Game.Move
 
 import Data.HVectBy

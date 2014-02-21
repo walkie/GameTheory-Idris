@@ -1,4 +1,4 @@
--- | Vectors where each element corresponds to a particular player.
+--   Vectors where each element corresponds to a particular player.
 module Game.ByPlayer
 
 import Data.VectBy

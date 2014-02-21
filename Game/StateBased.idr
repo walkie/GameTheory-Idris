@@ -1,4 +1,4 @@
--- | This module provides a higher-level way to build game trees for games
+--   This module provides a higher-level way to build game trees for games
 --   that are centered around the manipulation of state.
 module Game.StateBased
 
@@ -15,11 +15,11 @@ import Game.Tree
 -- | Build a continuous game tree for a state-based game.
 stateTreeC :
      {s : Type} -> {np : Nat} -> {mvs : MoveTypes np}
-  -> (s -> Bool)                                      -- ^ Is the game over?
-  -> (s -> PlayerID np)                               -- ^ Whose turn is it?
-  -> (s -> (i : PlayerID np) -> for i mvs -> Maybe s) -- ^ Execute a move and return the new state.
-  -> (s -> Payoff np)                                 -- ^ Payoff for this (final) state.
-  -> s                                                -- ^ The initial state.
+  -> (s -> Bool)                                      -- Is the game over?
+  -> (s -> PlayerID np)                               -- Whose turn is it?
+  -> (s -> (i : PlayerID np) -> for i mvs -> Maybe s) -- Execute a move and return the new state.
+  -> (s -> Payoff np)                                 -- Payoff for this (final) state.
+  -> s                                                -- The initial state.
   -> GameTree Continuous s mvs
 stateTreeC end who exec pay = tree
   where 
@@ -32,11 +32,11 @@ stateTreeC end who exec pay = tree
 --   condition is met.
 takeTurnsC :
      {s : Type} -> {np : Nat} -> {mvs : MoveTypes (S np)}
-  -> (s -> PlayerID (S np) -> Bool)                       -- ^ Is the game over?
-  -> (s -> (i : PlayerID (S np)) -> for i mvs -> Maybe s) -- ^ Execute a move and return the new state.
-  -> (s -> PlayerID (S np) -> Payoff (S np))              -- ^ Payoff for this (final) state.
-  -> s                                                    -- ^ The initial state.
-  -> PlayerID (S np)                                      -- ^ The ID of the initial player.
+  -> (s -> PlayerID (S np) -> Bool)                       -- Is the game over?
+  -> (s -> (i : PlayerID (S np)) -> for i mvs -> Maybe s) -- Execute a move and return the new state.
+  -> (s -> PlayerID (S np) -> Payoff (S np))              -- Payoff for this (final) state.
+  -> s                                                    -- The initial state.
+  -> PlayerID (S np)                                      -- The ID of the initial player.
   -> GameTree Continuous s mvs
 takeTurnsC end exec pay = tree
   where
@@ -54,12 +54,12 @@ takeTurnsC end exec pay = tree
 -- | Build a discrete game tree for a state-based game.
 stateTreeD :
      {s : Type} -> {np : Nat} -> {mvs : MoveTypes np}
-  -> (s -> Bool)                                  -- ^ Is the game over?
-  -> (s -> PlayerID np)                           -- ^ Whose turn is it?
-  -> (s -> (i : PlayerID np) -> List (for i mvs)) -- ^ Available moves.
-  -> (s -> (i : PlayerID np) -> for i mvs -> s)   -- ^ Execute a move and return the new state.
-  -> (s -> Payoff np)                             -- ^ Payoff for this (final) state.
-  -> s                                            -- ^ The initial state.
+  -> (s -> Bool)                                  -- Is the game over?
+  -> (s -> PlayerID np)                           -- Whose turn is it?
+  -> (s -> (i : PlayerID np) -> List (for i mvs)) -- Available moves.
+  -> (s -> (i : PlayerID np) -> for i mvs -> s)   -- Execute a move and return the new state.
+  -> (s -> Payoff np)                             -- Payoff for this (final) state.
+  -> s                                            -- The initial state.
   -> GameTree Discrete s mvs
 stateTreeD end who avail exec pay = tree
   where
@@ -74,12 +74,12 @@ stateTreeD end who avail exec pay = tree
 --   condition is met.
 takeTurnsD :
      {s : Type} -> {np : Nat} -> {mvs : MoveTypes (S np)}
-  -> (s -> PlayerID (S np) -> Bool)                   -- ^ Is the game over?
-  -> (s -> (i : PlayerID (S np)) -> List (for i mvs)) -- ^ Available moves.
-  -> (s -> (i : PlayerID (S np)) -> for i mvs -> s)   -- ^ Execute a move and return the new state.
-  -> (s -> PlayerID (S np) -> Payoff (S np))          -- ^ Payoff for this (final) state.
-  -> s                                                -- ^ The initial state.
-  -> PlayerID (S np)                                  -- ^ The ID of the initial player.
+  -> (s -> PlayerID (S np) -> Bool)                   -- Is the game over?
+  -> (s -> (i : PlayerID (S np)) -> List (for i mvs)) -- Available moves.
+  -> (s -> (i : PlayerID (S np)) -> for i mvs -> s)   -- Execute a move and return the new state.
+  -> (s -> PlayerID (S np) -> Payoff (S np))          -- Payoff for this (final) state.
+  -> s                                                -- The initial state.
+  -> PlayerID (S np)                                  -- The ID of the initial player.
   -> GameTree Discrete s mvs
 takeTurnsD end avail exec pay = tree
   where

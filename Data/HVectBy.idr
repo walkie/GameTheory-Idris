@@ -48,6 +48,8 @@ using (X : Nat -> Type, n : Nat, ts : Vect n Type)
   instance (Eq t, Eq (HVectBy X ts)) => Eq (HVectBy X (t :: ts)) where
     (MkHVectBy (x :: xs)) == (MkHVectBy (y :: ys)) =
         x == y && MkHVectBy xs == MkHVectBy ys
-  
+
+  {- TODO uncomment when Idris unification bug is fixed
   instance Shows n ts => Show (HVectBy X ts) where
     show = show . toHVect
+  -}
