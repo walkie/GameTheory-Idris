@@ -32,6 +32,14 @@ data Current : EdgeType -> StateType -> MoveTypes np -> Type where
 
 using (mvs : MoveTypes np)
 
+  -- | Get the current location in the game tree.
+  location : Current e s mvs -> GameTree e s mvs
+  location (MkCurrent l _) = l
+  
+  -- | Get the transcript of the current game iteration so far.
+  transcript : Current e s mvs -> Transcript mvs
+  transcript (MkCurrent _ t) = t
+
   -- | The initial game execution state.
   newIteration : GameTree e s mvs -> Current e s mvs
   newIteration l = MkCurrent l End
