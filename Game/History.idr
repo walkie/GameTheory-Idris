@@ -1,5 +1,8 @@
 module Game.History
 
+import Effects
+import Effect.State
+
 import Game.ByGame
 import Game.Current
 
@@ -88,6 +91,32 @@ using (mvs : MoveTypes np)
   -- | Compute the score from a history.
   score : History n mvs -> Payoff np
   score = foldr (<+>) tie . payoffs
+
+
+--
+-- * State getters
+--
+
+  -- | Apply a function to the state of the execution history, returning
+  --   the result.
+  getFromHistory : (History n mvs -> a) -> {[STATE (History n mvs)]} Eff m a
+  getFromHistory f = do h <- get; value (f h)
+
+  -- | Get the transript for each game iteration.
+  getTranscripts : {[STATE (History n mvs)]} Eff m (ByGame {n} (Transcript mvs))
+  getTranscripts = getFromHistory transcripts
+  
+  -- | Get the move summary for each game iteration.
+  getSummaries : {[STATE (History n mvs)]} Eff m (ByGame {n} (Summary mvs))
+  getSummaries = getFromHistory summaries
+
+  -- | Get the move summary for each game iteration.
+  getPayoffs : {[STATE (History n mvs)]} Eff m (ByGame {n} (Payoff np))
+  getPayoffs = getFromHistory payoffs
+
+  -- | Compute the score from a history.
+  getScore : {[STATE (History n mvs)]} Eff m (Payoff np)
+  getScore = getFromHistory score
 
 
 --

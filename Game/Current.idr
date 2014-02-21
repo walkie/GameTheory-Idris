@@ -1,5 +1,8 @@
 module Game.ExecState
 
+import Effects
+import Effect.State
+
 import Game.ByTurn
 import Game.Tree
 
@@ -51,3 +54,21 @@ using (mvs : MoveTypes np)
   -- | Add an event to the transcript.
   addEvent : (i : PlayerID np) -> for i mvs -> Current e s mvs -> Current e s mvs
   addEvent i m (MkCurrent l t) = MkCurrent l (Event i m t)
+
+
+--
+-- * State getters
+--
+
+  -- | Apply a function to the state of the current iteration, returning
+  --   the result.
+  getFromCurrent : (Current e s mvs -> a) -> {[STATE (Current e s mvs)]} Eff m a
+  getFromCurrent f = do c <- get; value (f c)
+
+  -- | Get the current location in the game tree.
+  getLocation : {[STATE (Current e s mvs)]} Eff m (GameTree e s mvs)
+  getLocation = getFromCurrent location
+
+  -- | Get the transcript of the current game iteration so far.
+  getTranscript : {[STATE (Current e s mvs)]} Eff m (Transcript mvs)
+  getTranscript = getFromCurrent transcript
