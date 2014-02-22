@@ -40,3 +40,17 @@ using (mvs : MoveTypes np)
   step ps (MkCurrent (Node s i es) t) = do
       m <- runStrategy i ps refl
       value (maybe Failed (stepMove t i m) (followEdge' es m))
+
+  -- | Run the current game iteration to completion. Returns the record of
+  --   the completed game, if successful.
+  %assert_total
+  finish : Edge e =>
+           Players m es mvs
+        -> Current e s mvs
+        -> {es} Eff m (Maybe (Complete mvs))
+  finish ps x = do
+      r <- step ps x
+      case r of
+        Moved y => finish ps y
+        Ended y => value (Just y)
+        Failed  => value Nothing
