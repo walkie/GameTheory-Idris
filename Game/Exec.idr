@@ -20,19 +20,23 @@ using (mvs : MoveTypes np)
     Failed : StepResult e s mvs
 
   -- | Construct the step result for a successful move.
-  execMove : Transcript mvs
+  stepMove : Transcript mvs
           -> (i : PlayerID np)
           -> for i mvs
           -> GameTree e s mvs
           -> StepResult e s mvs
-  execMove t i m g = Moved (MkCurrent g (Event i m t))
+  stepMove t i m g = Moved (MkCurrent g (Event i m t))
+
+  -- | Construct the step result for the end of the game.
+  stepEnd : Transcript mvs -> Payoff np -> StepResult e s mvs
+  stepEnd t p = Ended (MkComplete t (summarize t) p)
 
   -- | Process one node in the game tree.
   step : Edge e =>
          Players m es mvs
       -> Current e s mvs
       -> {es} Eff m (StepResult e s mvs)
-  step ps (MkCurrent (Leaf s p)    t) = value (Ended (MkComplete t (summarize t) p))
+  step ps (MkCurrent (Leaf s p)    t) = value (stepEnd t p)
   step ps (MkCurrent (Node s i es) t) = do
       m <- runStrategy i ps refl
-      value (maybe Failed (execMove t i m) (followEdge' es m))
+      value (maybe Failed (stepMove t i m) (followEdge' es m))
