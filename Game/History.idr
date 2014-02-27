@@ -92,6 +92,10 @@ using (mvs : MoveTypes np)
   score : History n mvs -> Payoff np
   score = foldr (<+>) tie . payoffs
 
+  -- | Add a new completed game iteration to the history.
+  addComplete : Complete mvs -> History n mvs -> History (S n) mvs
+  addComplete c h = fromVect (c :: toVect h)
+
 
 --
 -- * State getters

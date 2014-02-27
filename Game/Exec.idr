@@ -54,3 +54,24 @@ using (mvs : MoveTypes np)
         Moved y => finish ps y
         Ended y => value (Just y)
         Failed  => value Nothing
+
+  -- | Run the given game tree once to completion. Returns the record of
+  --   the completed game, if successful.
+  once : Edge e =>
+         Players m es mvs
+      -> GameTree e s mvs
+      -> {es} Eff m (Maybe (Complete mvs))
+  once ps = finish ps . newIteration
+
+  -- | Run a game tree for the given number of iterations. Returns the history
+  --   of all iterations, assuming they complete successfully.
+  iterate : Edge e =>
+            (k : Nat)
+         -> Players m es mvs
+         -> GameTree e s mvs
+         -> {es} Eff m (Maybe (History k mvs))
+  iterate Z     ps t = value (Just [])
+  iterate (S k) ps t = do
+      c <- once ps t
+      h <- iterate k ps t
+      value (liftA2 addComplete c h)
